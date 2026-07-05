@@ -71,4 +71,4 @@ and follow all applicable electrical safety practices.
 
 ------------------------------------------------------------------------
 
-Developed by David Bannerman with assistance from ChatGPT.
+Developed by David Bannerman with just a slight assistance from ChatGPT.
