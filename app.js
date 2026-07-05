@@ -3,8 +3,8 @@
 
 const AWG = {"14":2.525,"16":4.016,"18":6.385,"22":16.14,"24":25.67};
 const ALPHA = 0.00393;
-const JOBS = "fault_locator_v16_jobs";
-const SETTINGS = "fault_locator_v16_settings";
+const JOBS = "fault_locator_v17_jobs";
+const SETTINGS = "fault_locator_v17_settings";
 let selectedWire = {name:"22 AWG Solid Copper", gauge:"22", ohms1000:16.14, isLoopValue:false, tempComp:true};
 let gpsData = null;
 
@@ -204,7 +204,7 @@ Distance = ${ohms} ÷ ${fmt(loopPerFt,6)} = ${fmt(distance,2)} ft`;
 
 function blank(){
   $("distance").textContent = "-- ft";
-  $("status").textContent = "NORMAL";
+  /* bottom status removed */
   $("range").textContent = "--";
   $("remaining").textContent = "--";
   $("tempAdj").textContent = "0.0%";
