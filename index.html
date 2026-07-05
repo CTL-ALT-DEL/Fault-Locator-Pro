@@ -7,235 +7,126 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Fault Locator">
 <meta name="theme-color" content="#070707">
-<title>Fault Locator Pro 2.0</title>
+<title>Fault Locator Pro</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div id="boot" class="boot"><div class="boot-box"><div class="boot-title">FAULT LOCATOR PRO</div><div class="boot-sub">Professional Edition</div><div id="bootLine">Initializing...</div></div></div>
 <div id="app">
 <header>
-  <div class="brand">
-    <div class="logo">FL</div>
-    <div>
-      <div class="eyebrow">Cable Fault Field Instrument</div>
-      <h1>Fault Locator Pro 2.0</h1>
-    </div>
+  <div>
+    <div class="eyebrow">Cable Fault Field Instrument</div>
+    <h1>Fault Locator Pro</h1>
   </div>
-  <div class="ver">v18</div>
+  <div class="ver">v19</div>
 </header>
 
 <main>
 <section id="test" class="screen active">
-  <div class="meter">
-    <div class="display">
-      <div class="lcd-top"><span id="ohmMini">0.00 Ω</span><span class="battery"><i></i></span></div>
-      <div class="auto-fault">
-        <span id="faultIcon">✓</span>
-        <span id="faultLabel">NORMAL</span>
+  <div class="meter compact">
+    <div class="lcd">
+      <div class="lcd-top">
+        <span id="ohmMini">0.00 Ω</span>
+        <span class="battery"><i></i></span>
       </div>
+      <div class="fault-pill"><span id="faultIcon">✓</span><b id="faultLabel">NORMAL</b></div>
       <div id="distance">-- ft</div>
-      <div class="lcd-segment-wrap">
-        <div id="lcdSegments" class="lcd-segments"></div>
-      </div>
-      <div class="confidence-line"><span>Confidence</span><div class="confidence-track"><div id="confidenceFill"></div></div><b id="confidencePct">--</b></div>
+      <div id="lcdSegments" class="segments"></div>
     </div>
 
-    <button type="button" id="wireChooser" class="wire-chooser">
-      <span>Wire Selected</span>
-      <strong id="selectedWire">22 AWG Solid Copper</strong>
-      <em>Tap to search wire types</em>
-    </button>
+    <div class="compact-grid">
+      <button id="wireBtn" type="button" class="wire-btn">
+        <span>Wire</span><b id="selectedWire">22 AWG Solid Copper</b>
+      </button>
 
-    <div id="wirePanel" class="wire-panel hidden">
-      <input id="wireSearch" placeholder="Search: FPLR, Protectowire, CAT5, 18 AWG">
-      <div class="filter-buttons">
-        <button type="button" data-filter="">All</button>
-        <button type="button" data-filter="fire">Fire</button>
-        <button type="button" data-filter="protectowire">Protectowire</button>
-        <button type="button" data-filter="cat">CAT</button>
-        <button type="button" data-filter="security">Security</button>
-        <button type="button" data-filter="thermostat">HVAC</button>
-      </div>
-      <div id="wireResults" class="wire-results"></div>
-    </div>
-
-    <div class="mode-row">
-      <label>Test Mode
-        <select id="testMode">
-          <option value="pair" selected>Across Pair / Loop</option>
-          <option value="ground">Conductor to Ground</option>
-        </select>
+      <label>Ω Reading
+        <input id="ohms" type="number" inputmode="decimal" step="0.001" placeholder="ohms">
       </label>
-      <label>Length Basis
-        <select id="lengthBasis">
-          <option value="estimate500" selected>Estimating 500 ft</option>
-          <option value="entered">Use entered cable length</option>
-        </select>
-      </label>
-    </div>
 
-    <div class="grid">
+      <label>Length ft
+        <input id="length" type="number" inputmode="decimal" placeholder="500 est.">
+      </label>
+
       <label>Gauge
         <select id="gauge">
-          <option value="14">14 AWG</option>
-          <option value="16">16 AWG</option>
-          <option value="18">18 AWG</option>
-          <option value="22" selected>22 AWG</option>
-          <option value="24">24 AWG</option>
+          <option value="14">14</option>
+          <option value="16">16</option>
+          <option value="18">18</option>
+          <option value="22" selected>22</option>
+          <option value="24">24</option>
         </select>
       </label>
-      <label>Meter Reading Ω
-        <input id="ohms" class="ohms-input" type="number" inputmode="decimal" step="0.001" placeholder="enter ohms">
+    </div>
+
+    <div id="wirePanel" class="wire-panel hidden">
+      <input id="wireSearch" placeholder="Search wire">
+      <div class="filters">
+        <button data-filter="" type="button">All</button>
+        <button data-filter="fire" type="button">Fire</button>
+        <button data-filter="protectowire" type="button">Protect</button>
+        <button data-filter="cat" type="button">CAT</button>
+      </div>
+      <div id="wireResults"></div>
+    </div>
+
+    <div class="mini-row">
+      <label>Mode
+        <select id="testMode">
+          <option value="pair">Pair</option>
+          <option value="ground">Ground</option>
+        </select>
       </label>
+      <label>Temp °F
+        <input id="temp" type="number" inputmode="decimal" value="68">
+      </label>
+      <button id="clearBtn" type="button">Clear</button>
+      <button id="saveBtn" type="button" class="primary">Save</button>
     </div>
-
-    <details class="options">
-      <summary>Temperature, cable length & custom wire</summary>
-      <div class="grid">
-        <label>Wire Temp °F
-          <input id="temp" type="number" inputmode="decimal" value="68">
-        </label>
-        <label>Cable Length ft
-          <input id="length" type="number" inputmode="decimal" placeholder="optional">
-        </label>
-      </div>
-      <div class="chips">
-        <button type="button" data-temp="32">Cold 32°</button>
-        <button type="button" data-temp="68" class="picked">68°</button>
-        <button type="button" data-temp="90">Warm 90°</button>
-        <button type="button" data-temp="120">Hot 120°</button>
-      </div>
-      <div class="custom-wire">
-        <label>Custom Wire Name<input id="customName" placeholder="optional"></label>
-        <label>Custom Ω / 1000 ft<input id="customOhms" type="number" inputmode="decimal" step="0.001" placeholder="example 6.5"></label>
-        <button id="useCustom" type="button" class="primary">Use Custom Wire</button>
-      </div>
-    </details>
   </div>
 
-  <div id="warning" class="warning hidden"></div>
-
-  <div class="card guidance-card">
-    <h2>Technician Guidance</h2>
-    <div id="guidanceText" class="guidance">Enter a meter reading and the app will suggest next steps.</div>
-  </div>
-
-  <div class="card score-card"><h2>Cable Health</h2><div class="health-row"><b id="healthScore">--</b><span>/ 100</span></div><p id="healthText" class="muted">No reading yet.</p></div>
-
-  <details class="card">
-    <summary>Fault position details</summary>
-    <div class="scale-labels"><span>Test End</span><span id="farLabel">Far End</span></div>
-    <div class="bar"><div id="fill"></div><div id="pin">▲</div></div>
-    <p id="barText" class="muted">Enter cable length for position bar.</p>
-    <div class="metrics">
-      <div><span>Range</span><b id="range">--</b></div>
-      <div><span>Remaining</span><b id="remaining">--</b></div>
-      <div><span>Temp Adj.</span><b id="tempAdj">0.0%</b></div>
-    </div>
-  </details>
-
-  <div class="actions">
-    <button id="clearBtn" type="button">Clear</button>
-    <button id="saveBtn" type="button" class="primary">Save Job</button>
+  <div class="guidance-card">
+    <div id="guidanceText">Enter a meter reading for guidance.</div>
   </div>
 </section>
 
 <section id="job" class="screen">
   <div class="card">
-    <h2>Job Report</h2>
-    <label>Customer / Site<input id="customer" placeholder="optional"></label>
-    <label>Cable ID / Location<input id="cableId" placeholder="optional"></label>
-    <label>Photo<input id="photoInput" type="file" accept="image/*" capture="environment"></label>
-    <div id="photoStatus" class="muted">No photo attached.</div>
-    <label>Notes<textarea id="notes" rows="4" placeholder="optional"></textarea></label>
-    <button id="gpsBtn" type="button" class="primary">Use GPS Location</button>
+    <h2>Job</h2>
+    <label>Customer<input id="customer"></label>
+    <label>Cable ID<input id="cableId"></label>
+    <label>Notes<textarea id="notes" rows="3"></textarea></label>
+    <button id="gpsBtn" type="button" class="primary">GPS</button>
     <p id="gpsStatus" class="muted">GPS not saved.</p>
-    <a id="mapLink" class="maplink hidden" target="_blank" rel="noopener">Open GPS in Maps</a>
-    <button id="jobSaveBtn" type="button" class="primary">Save Job</button>
-    <button id="copyBtn" type="button">Copy Text Report</button>
-    <p class="muted">Copy Text Report places the job summary on your clipboard so you can paste it into Messages, Mail, or Notes.</p>
+    <button id="copyBtn" type="button">Copy Report</button>
   </div>
 </section>
 
 <section id="history" class="screen">
   <div class="card">
-    <div class="headrow"><h2>History</h2><button id="clearHistoryBtn" class="mini" type="button">Clear</button></div>
-    <div id="historyList" class="empty">No saved jobs yet.</div>
+    <div class="head"><h2>History</h2><button id="clearHistory" type="button">Clear</button></div>
+    <div id="historyList" class="empty">No saved jobs.</div>
   </div>
 </section>
-
-<section id="ref" class="screen">
-  <div class="card"><h2>Favorites</h2><div id="favoritesList" class="wire-results"></div></div>
-  <div class="card">
-    <h2>Wire Reference</h2>
-    <table><thead><tr><th>Wire</th><th>Resistance</th></tr></thead><tbody id="refRows"></tbody></table>
-  </div>
-  <details class="card">
-    <summary>Show calculation math</summary>
-    <pre id="math"></pre>
-  </details>
-</section>
-
-<section id="tools" class="screen"><div class="card"><h2>Extra Tools</h2><button id="beepBtn" type="button" class="primary">Beep / Click</button><button id="flashBtn" type="button">Flashlight Mode</button><p class="muted">iPhone Safari may not allow direct torch control. This provides a bright-screen work light.</p><div id="workLight" class="work-light hidden">WORK LIGHT</div></div></section>
 
 <section id="help" class="screen">
-  <details class="card help-detail">
-    <summary>How to Test with a Digital Multimeter</summary>
-    <ol>
-      <li><strong>De-energize first.</strong> Turn the circuit off and verify no voltage is present before switching to ohms.</li>
-      <li><strong>Isolate the cable.</strong> Disconnect both conductors from panels, modules, relays, EOL resistors, NAC appliances, detectors, and any connected equipment.</li>
-      <li><strong>Discharge stored voltage.</strong> Long cable runs and connected electronics can hold stray voltage. Confirm the meter reads near 0 V before measuring resistance.</li>
-      <li><strong>Zero the meter leads.</strong> Touch the probes together and use REL/Zero if available.</li>
-      <li><strong>Across-pair test.</strong> Measure between the two conductors at the same end of the cable. This is the normal distance-to-short mode.</li>
-      <li><strong>Ground-fault test.</strong> Measure each conductor to building ground, conduit, shield, or drain wire.</li>
-      <li><strong>Check both ends if possible.</strong> A clean single fault should roughly agree when measured from opposite ends.</li>
-    </ol>
+  <details class="card"><summary>DMM Test Steps</summary>
+    <ol><li>De-energize and verify no voltage.</li><li>Disconnect devices and EOL parts.</li><li>Zero meter leads.</li><li>Measure across pair or conductor to ground.</li><li>Enter stable ohm reading.</li></ol>
   </details>
-
-  <details class="card help-detail">
-    <summary>Troubleshooting Faults</summary>
-    <ul class="help-list">
-      <li><strong>Dead short near test end:</strong> Very low ohms. Recheck meter lead zero and inspect the first boxes, junctions, and terminations.</li>
-      <li><strong>Ground fault:</strong> Test each conductor to ground. Look for staples, damaged jacket, wet boxes, conduit rub-through, shield/drain contact, or devices touching grounded metal.</li>
-      <li><strong>Bad device or module:</strong> If the fault disappears when devices are removed, reconnect one device at a time until the fault returns.</li>
-      <li><strong>Stray voltage:</strong> If voltage exists on the pair, resistance readings will be unreliable.</li>
-      <li><strong>Partial or resistive fault:</strong> Higher-than-expected resistance can point to corrosion, water, loose splices, damaged insulation, or a device still in circuit.</li>
-    </ul>
+  <details class="card"><summary>Troubleshooting</summary>
+    <ul><li>Low ohms: inspect nearby boxes and terminations.</li><li>Ground fault: check staples, conduit edges, wet boxes, shields/drain wires.</li><li>High ohms: look for corrosion, bad splices, device still connected, partial opens.</li></ul>
   </details>
-
-  <details class="card help-detail">
-    <summary>Klein ET450 Tracer Tips</summary>
-    <ol>
-      <li>For de-energized tracing, isolate the cable and connect the transmitter leads to the target conductors per the Klein manual.</li>
-      <li>Start with lower receiver sensitivity and increase only as needed.</li>
-      <li>Trace from the test end toward the expected fault distance calculated by the app.</li>
-      <li>If the signal suddenly drops or spreads, inspect nearby boxes, splices, devices, metal edges, and damaged cable points.</li>
-      <li>Use NCV only as a voltage-presence aid. Confirm with a meter before touching conductors.</li>
-    </ol>
-  </details>
-
-  <details class="card help-detail">
-    <summary>Update History</summary>
-    <div class="update-log">
-      <p><b>v16</b> Emergency repair build: restored navigation and calculation, kept LCD bar and collapsed help safely.</p>
-      <p><b>v15</b> Attempted LCD/help cleanup but caused layout breakage.</p>
-      <p><b>v14</b> Added automatic fault diagnosis, technician guidance, expanded DMM help, troubleshooting guide, and Klein ET450 section.</p>
-      <p><b>v13</b> Rebuilt front-panel wire lookup and lighter ohm input placeholder.</p>
-      <p><b>v1-v12</b> Initial calculator, PWA support, GPS, wire lookup, and job tools.</p>
-    </div>
+  <details class="card"><summary>Update History</summary>
+    <p class="muted"><b>v19</b> Compact single-screen design, stable rewrite, front-panel wire lookup, LCD bar, auto guidance.</p>
   </details>
 </section>
 
 <section id="settings" class="screen">
   <div class="card">
     <h2>Settings</h2>
-    <label class="check"><input id="largeMode" type="checkbox"> Large control mode</label>
     <label>Calibration %
       <input id="calibration" type="number" inputmode="decimal" step="0.1" value="0">
     </label>
-    <p class="muted">Calibration adjusts the copper resistance table after testing against a known length.</p>
   </div>
 </section>
 </main>
@@ -244,8 +135,6 @@
   <button class="tab active" data-screen="test" type="button">Test</button>
   <button class="tab" data-screen="job" type="button">Job</button>
   <button class="tab" data-screen="history" type="button">Log</button>
-  <button class="tab" data-screen="ref" type="button">Ref</button>
-  <button class="tab" data-screen="tools" type="button">Tools</button>
   <button class="tab" data-screen="help" type="button">Help</button>
   <button class="tab" data-screen="settings" type="button">Set</button>
 </nav>
