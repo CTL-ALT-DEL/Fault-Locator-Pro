@@ -1,5 +1,5 @@
 (()=>{"use strict";
-const AWG={14:2.525,16:4.016,18:6.385,22:16.14,24:25.67},ALPHA=.00393,JOBS="flp_v24_jobs";
+const AWG={14:2.525,16:4.016,18:6.385,22:16.14,24:25.67},ALPHA=.00393,JOBS="flp_v26_jobs";
 let wire={name:"22 AWG Solid Copper",gauge:"22",ohms1000:16.14,isLoop:false,temp:true},gps=null,clickMuted=false;
 const DB=[
 {id:"14",name:"14 AWG Solid Copper",cat:"Copper",ohms1000:2.525,gauge:"14",tags:"14 awg copper"},
@@ -37,7 +37,7 @@ const DB=[
 {id:"cat5",name:"CAT5e 24 AWG Pair",cat:"Data",ohms1000:25.67,gauge:"24",tags:"cat cat5 cat5e network"},
 {id:"sec22",name:"22 AWG Security Cable",cat:"Security",ohms1000:16.14,gauge:"22",tags:"security alarm 22"}
 ];
-const $=id=>document.getElementById(id),read=id=>{let v=parseFloat($(id).value);return Number.isFinite(v)?v:NaN},fmt=(v,d=1)=>Number.isFinite(v)?v.toFixed(d):"--",esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+const $=id=>document.getElementById(id),read=id=>{const el=$(id);if(!el)return NaN;let v=parseFloat(el.value);return Number.isFinite(v)?v:NaN},fmt=(v,d=1)=>Number.isFinite(v)?v.toFixed(d):"--",esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 function note(w){let o=w.ohms1000||w.ohmsPerFt*1000;return w.ohmsPerFt?`${w.ohmsPerFt} Ω/ft`:`${o} Ω/1000 ft`}
 function renderWires(q=""){let toks=q.toLowerCase().split(/\s+/).filter(Boolean),rows=DB.filter(w=>{let h=(w.name+" "+w.cat+" "+w.tags).toLowerCase();return !toks.length||toks.every(t=>h.includes(t))}).slice(0,10);$("wireResults").innerHTML=rows.map(w=>`<div class="wire-card"><div class="wire-name">${esc(w.name)}</div><div class="wire-meta">${esc(note(w))}</div><button data-wire="${w.id}" type="button">Use</button></div>`).join("")||'<div class="muted">No match</div>';$("wireResults").querySelectorAll("[data-wire]").forEach(b=>b.onclick=()=>choose(b.dataset.wire))}
 function choose(id){let w=DB.find(x=>x.id===id);if(!w)return;wire={name:w.name,gauge:w.gauge,ohms1000:w.ohms1000||w.ohmsPerFt*1000,isLoop:!!w.ohmsPerFt,temp:!w.ohmsPerFt};$("selectedWire").textContent=wire.name;if(AWG[wire.gauge])$("gauge").value=wire.gauge;$("wirePanel").classList.add("hidden");$("wireSearch").value="";calc();toast("Wire selected")}

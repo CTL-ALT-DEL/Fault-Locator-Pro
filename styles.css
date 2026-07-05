@@ -773,3 +773,10 @@ nav{
 .compact-grid {
   margin-top: 9px !important;
 }
+
+/* v26 startup and visual cleanup */
+.compact-grid:before,
+.mini-row:before {
+  display: none !important;
+  content: "" !important;
+}
