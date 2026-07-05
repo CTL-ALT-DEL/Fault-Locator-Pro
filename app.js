@@ -54,6 +54,7 @@
   }
 
   function calculate() {
+    updateFaultIcon();
     updateSelectedWireDisplay();
     const gauge = $("gauge").value;
     const ohms = read("ohms");
@@ -216,6 +217,7 @@ Notes: ${item.notes || "None"}`;
     updateGps();
     calculate();
     screen("test");
+    setTimeout(() => $("ohms").focus(), 150);
   }
 
   function getGps() {
@@ -287,28 +289,34 @@ Notes: ${item.notes || "None"}`;
   function updateFaultIcon() {
     const value = $("faultType") ? $("faultType").value : "short";
     const iconMap = {short:"⚡", ground:"⏚", partial:"◒", open:"?"};
-    $("faultIcon").textContent = iconMap[value] || "⚡";
-    $("faultLabel").textContent = faultTypeText(value).toUpperCase();
+    const label = faultTypeText(value).toUpperCase();
+    if ($("faultIcon")) $("faultIcon").textContent = iconMap[value] || "⚡";
+    if ($("faultLabel")) $("faultLabel").textContent = label;
   }
 
   function renderWireLookup() {
     const query = ($("wireSearch").value || "").trim().toLowerCase();
+    const tokens = query.split(/\s+/).filter(Boolean);
+
     const results = WIRE_DB.filter(w => {
       const haystack = (w.name + " " + w.category + " " + w.tags).toLowerCase();
-      return !query || haystack.includes(query);
-    }).slice(0, 12);
+      return tokens.length === 0 || tokens.every(token => haystack.includes(token));
+    }).slice(0, 20);
 
     $("wireResults").innerHTML = results.map(w => {
       const ohms1000 = w.ohms1000 || (w.ohmsPerFt * 1000);
-      const note = w.ohmsPerFt ? `${w.ohmsPerFt} Ω/ft (${ohms1000.toFixed(1)} Ω/1000 ft)` : `${ohms1000} Ω/1000 ft`;
-      const recommended = query && (w.tags.toLowerCase().includes(query) || w.name.toLowerCase().includes(query));
+      const note = w.ohmsPerFt
+        ? `${w.ohmsPerFt} Ω/ft (${ohms1000.toFixed(1)} Ω/1000 ft equivalent)`
+        : `${ohms1000} Ω/1000 ft`;
+      const haystack = (w.name + " " + w.category + " " + w.tags).toLowerCase();
+      const recommended = query && tokens.every(token => haystack.includes(token));
       return `<div class="wire-card ${recommended ? "recommended" : ""}">
         <div class="wire-name">${escapeHtml(w.name)}</div>
         <div class="wire-meta">${escapeHtml(note)}</div>
         <span class="wire-pill">${escapeHtml(w.category)}</span>
         <button type="button" data-wire="${escapeHtml(w.id)}">Use This Wire</button>
       </div>`;
-    }).join("") || `<div class="muted">No matching wire found. Use Custom Wire below.</div>`;
+    }).join("") || `<div class="no-results">No matching wire found. Try fewer words or use Custom Wire below.</div>`;
 
     $("wireResults").querySelectorAll("[data-wire]").forEach(button => {
       button.addEventListener("click", () => useWire(button.dataset.wire));
@@ -395,6 +403,7 @@ Notes: ${item.notes || "None"}`;
       calculate();
     }));
 
+    $("chooseWireBtn").addEventListener("click", () => screen("ref"));
     $("focusOhms").addEventListener("click", () => { $("ohms").focus(); $("ohms").select(); });
     $("clearBtn").addEventListener("click", () => { $("ohms").value = ""; $("length").value = ""; calculate(); $("ohms").focus(); });
     $("saveBtn").addEventListener("click", saveJob);
@@ -409,6 +418,7 @@ Notes: ${item.notes || "None"}`;
       });
     });
     $("faultType").addEventListener("change", () => { updateFaultIcon(); calculate(); });
+    $("faultType").addEventListener("input", () => { updateFaultIcon(); calculate(); });
     $("copyBtn").addEventListener("click", () => { copyText(report()); toast("Report copied."); });
     $("gpsBtn").addEventListener("click", getGps);
     $("clearHistoryBtn").addEventListener("click", () => { if (confirm("Clear saved jobs?")) { setJobs([]); renderHistory(); } });
