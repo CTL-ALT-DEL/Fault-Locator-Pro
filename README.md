@@ -6,7 +6,7 @@ in a two-conductor solid copper cable.
 Fault Locator Pro
 
 
-The app calculates the estimated fault location by using:
+The app calculates the estimated fault location by using: 
 
 -   Wire gauge (AWG)
 -   Measured loop resistance (ohms)
