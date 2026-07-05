@@ -20,7 +20,8 @@ function readNumber(id) {
 }
 
 function formatWireName(name) {
-  return String(name).replace(/^(\d{2}(?:\/\d)?(?:\s+AWG)?)(\s+)/i, "$1<br>");
+  const text = String(name || "");
+  return text.replace(/^(\d{2}(?:\/\d)?(?:\s+AWG)?)(\s+)/i, "$1<br>");
 }
 
 function updateWireUI() {
@@ -42,7 +43,7 @@ function renderWireFavorites() {
   if (!container) return;
   container.innerHTML = favorites.map(id => {
     const wire = findWire(id);
-    return wire ? `<button type="button" data-favorite-wire="${wire.id}">${wire.name.replace(" fire alarm", "").replace(/^(\\d{2}(?:\\/\\d)?(?:\\s+AWG)?)(\\s+)/i, "$1<br>")}</button>` : "";
+    return wire ? `<button type="button" data-favorite-wire="${wire.id}">${formatWireName(wire.name.replace(" fire alarm", ""))}</button>` : "";
   }).join("");
   $$("[data-favorite-wire]", container).forEach(button => {
     button.addEventListener("click", () => selectWireById(button.dataset.favoriteWire));
@@ -222,11 +223,18 @@ function boot() {
 
 function hideSplash() {
   const splash = document.getElementById("splash");
-  if (splash) setTimeout(() => splash.classList.add("hide"), 2500);
+  if (splash) setTimeout(() => splash.classList.add("hide"), 1800);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  boot();
-  hideSplash();
+  try {
+    boot();
+  } catch (error) {
+    console.error("Startup error:", error);
+    const guidance = document.getElementById("guidance");
+    if (guidance) guidance.textContent = "Startup warning. Reload the app if controls do not respond.";
+  } finally {
+    hideSplash();
+  }
 });
 

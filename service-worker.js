@@ -1,4 +1,4 @@
-const CACHE_NAME = "fault-locator-pro-2-0-2";
+const CACHE_NAME = "fault-locator-pro-2-0-3";
 const FILES = [
   "./",
   "index.html",
