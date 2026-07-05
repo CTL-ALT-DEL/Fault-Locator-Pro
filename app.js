@@ -2,8 +2,8 @@
   "use strict";
   const AWG = {"14":2.525,"16":4.016,"18":6.385,"22":16.14,"24":25.67};
   const ALPHA = 0.00393;
-  const JOBS = "fault_locator_v7_jobs";
-  const SETTINGS = "fault_locator_v7_settings";
+  const JOBS = "fault_locator_v8_jobs";
+  const SETTINGS = "fault_locator_v8_settings";
   let gpsData = null;
   const $ = id => document.getElementById(id);
   const read = id => {
@@ -181,7 +181,20 @@ Notes: ${item.notes || "None"}`;
   }
 
   function updateGps() {
-    $("gpsStatus").textContent = gpsData ? `GPS saved: ${gpsData.lat.toFixed(6)}, ${gpsData.lon.toFixed(6)} ± ${Math.round(gpsData.accuracy)}m` : "GPS not saved.";
+    const link = $("mapLink");
+    if (!gpsData) {
+      $("gpsStatus").textContent = "GPS not saved.";
+      if (link) {
+        link.classList.add("hidden");
+        link.removeAttribute("href");
+      }
+      return;
+    }
+    $("gpsStatus").textContent = `GPS saved: ${gpsData.lat.toFixed(6)}, ${gpsData.lon.toFixed(6)} ± ${Math.round(gpsData.accuracy)}m`;
+    if (link) {
+      link.href = `https://maps.apple.com/?ll=${gpsData.lat},${gpsData.lon}`;
+      link.classList.remove("hidden");
+    }
   }
 
   function copyText(text) {
@@ -228,7 +241,8 @@ Notes: ${item.notes || "None"}`;
       calculate();
     }));
 
-    $("clearBtn").addEventListener("click", () => { $("ohms").value = ""; $("length").value = ""; calculate(); });
+    $("focusOhms").addEventListener("click", () => { $("ohms").focus(); $("ohms").select(); });
+    $("clearBtn").addEventListener("click", () => { $("ohms").value = ""; $("length").value = ""; calculate(); $("ohms").focus(); });
     $("saveBtn").addEventListener("click", saveJob);
     $("copyBtn").addEventListener("click", () => { copyText(report()); toast("Report copied."); });
     $("gpsBtn").addEventListener("click", getGps);

@@ -18,11 +18,11 @@
   <div class="brand">
     <div class="logo">FL</div>
     <div>
-      <div class="eyebrow">Solid Copper Loop Test</div>
+      <div class="eyebrow">Solid Copper Loop Fault Tool</div>
       <h1>Fault Locator Pro</h1>
     </div>
   </div>
-  <div class="ver">v7</div>
+  <div class="ver">v8</div>
 </header>
 
 <main>
@@ -60,10 +60,10 @@
         </label>
       </div>
       <div class="chips">
-        <button type="button" data-temp="32">32°</button>
+        <button type="button" data-temp="32">Cold 32°</button>
         <button type="button" data-temp="68" class="picked">68°</button>
-        <button type="button" data-temp="90">90°</button>
-        <button type="button" data-temp="120">120°</button>
+        <button type="button" data-temp="90">Warm 90°</button>
+        <button type="button" data-temp="120">Hot 120°</button>
       </div>
     </details>
   </div>
@@ -82,9 +82,10 @@
   </details>
 
   <div class="actions">
+    <button id="focusOhms" type="button">Enter Reading</button>
     <button id="clearBtn" type="button">Clear</button>
-    <button id="saveBtn" type="button" class="primary">Save Job</button>
   </div>
+  <button id="saveBtn" type="button" class="wide primary">Save Current Job</button>
 </section>
 
 <section id="job" class="screen">
@@ -95,6 +96,7 @@
     <label>Notes<textarea id="notes" rows="4" placeholder="optional"></textarea></label>
     <button id="gpsBtn" type="button" class="primary">Use GPS Location</button>
     <p id="gpsStatus" class="muted">GPS not saved.</p>
+    <a id="mapLink" class="maplink hidden" target="_blank" rel="noopener">Open GPS in Maps</a>
     <button id="copyBtn" type="button" class="primary">Copy Report</button>
   </div>
 </section>

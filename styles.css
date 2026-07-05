@@ -29,3 +29,12 @@ nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(sa
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom));background:#151515;border:1px solid var(--yellow);border-radius:999px;padding:10px 16px}
 body.large input,body.large select,body.large button{min-height:66px;font-size:20px}body.large #distance{font-size:68px}
 @media(max-width:440px){.grid{grid-template-columns:1fr}#distance{font-size:48px}.metrics{grid-template-columns:1fr}.tab{font-size:11px}}
+
+/* v8 polish */
+.wide{width:100%;margin-bottom:14px}
+.maplink{display:block;background:#222;color:var(--yellow);border:1px solid #444;border-radius:14px;padding:13px;text-align:center;text-decoration:none;font-weight:900;margin-bottom:12px}
+.display{border-radius:22px}
+#distance{font-size:60px}
+.meter{border-radius:30px}
+.chips button{font-size:14px}
+@media(max-width:440px){.chips{grid-template-columns:1fr 1fr}}
