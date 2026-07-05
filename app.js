@@ -2,25 +2,23 @@
   "use strict";
   const AWG = {"14":2.525,"16":4.016,"18":6.385,"22":16.14,"24":25.67};
   const WIRE_DB = [
-    {id:"awg14", name:"14 AWG Solid Copper", category:"Standard Copper", ohms1000:2.525, gauge:"14", tags:"14 awg copper solid"},
-    {id:"awg16", name:"16 AWG Solid Copper", category:"Standard Copper", ohms1000:4.016, gauge:"16", tags:"16 awg copper solid"},
-    {id:"awg18", name:"18 AWG Solid Copper", category:"Standard Copper", ohms1000:6.385, gauge:"18", tags:"18 awg copper solid"},
-    {id:"awg22", name:"22 AWG Solid Copper", category:"Standard Copper", ohms1000:16.14, gauge:"22", tags:"22 awg copper solid"},
-    {id:"awg24", name:"24 AWG Solid Copper", category:"Standard Copper", ohms1000:25.67, gauge:"24", tags:"24 awg copper solid"},
-    {id:"fplr18", name:"18 AWG Fire Alarm Cable / FPLR-FPLP", category:"Fire Alarm", ohms1000:6.5, gauge:"18", tags:"18/2 18 awg fplr fplp fire alarm slc nac"},
-    {id:"fplr16", name:"16 AWG Fire Alarm Cable / FPLR-FPLP", category:"Fire Alarm", ohms1000:4.1, gauge:"16", tags:"16/2 16 awg fplr fplp fire alarm nac slc"},
-    {id:"fplr14", name:"14 AWG Fire Alarm Cable / FPLR-FPLP", category:"Fire Alarm", ohms1000:2.6, gauge:"14", tags:"14/2 14 awg fplr fplp fire alarm nac"},
-    {id:"fplr12", name:"12 AWG Fire Alarm Cable / FPLR-FPLP", category:"Fire Alarm", ohms1000:1.8, gauge:"custom", tags:"12/2 12 awg fplr fplp fire alarm nac"},
-    {id:"protectowire_phsc", name:"Protectowire PHSC Digital Linear Heat Detector", category:"Protectowire", ohmsPerFt:0.185, gauge:"custom", tags:"protectowire phsc linear heat detector steel"},
+    {id:"awg14", name:"14 AWG Solid Copper", category:"Standard Copper", ohms1000:2.525, gauge:"14", tags:"14 awg copper solid standard"},
+    {id:"awg16", name:"16 AWG Solid Copper", category:"Standard Copper", ohms1000:4.016, gauge:"16", tags:"16 awg copper solid standard"},
+    {id:"awg18", name:"18 AWG Solid Copper", category:"Standard Copper", ohms1000:6.385, gauge:"18", tags:"18 awg copper solid standard"},
+    {id:"awg22", name:"22 AWG Solid Copper", category:"Standard Copper", ohms1000:16.14, gauge:"22", tags:"22 awg copper solid standard"},
+    {id:"awg24", name:"24 AWG Solid Copper", category:"Standard Copper", ohms1000:25.67, gauge:"24", tags:"24 awg copper solid standard"},
+    {id:"fire18", name:"18/2 Fire Alarm FPLR / FPLP", category:"Fire Alarm", ohms1000:6.5, gauge:"18", tags:"fire fire alarm fplr fplp 18/2 18 awg slc nac red cable"},
+    {id:"fire16", name:"16/2 Fire Alarm FPLR / FPLP", category:"Fire Alarm", ohms1000:4.1, gauge:"16", tags:"fire fire alarm fplr fplp 16/2 16 awg nac red cable"},
+    {id:"fire14", name:"14/2 Fire Alarm FPLR / FPLP", category:"Fire Alarm", ohms1000:2.6, gauge:"14", tags:"fire fire alarm fplr fplp 14/2 14 awg nac red cable"},
+    {id:"fire12", name:"12/2 Fire Alarm FPLR / FPLP", category:"Fire Alarm", ohms1000:1.8, gauge:"custom", tags:"fire fire alarm fplr fplp 12/2 12 awg nac red cable"},
+    {id:"protectowire_phsc", name:"Protectowire PHSC Linear Heat Detector", category:"Protectowire", ohmsPerFt:0.185, gauge:"custom", tags:"protectowire phsc linear heat detector"},
     {id:"protectowire_plr", name:"Protectowire PLR Low Resistance Linear Heat Detector", category:"Protectowire", ohmsPerFt:0.058, gauge:"custom", tags:"protectowire plr low resistance linear heat detector"},
     {id:"protectowire_cti", name:"Protectowire CTI Linear Heat Detector", category:"Protectowire", ohmsPerFt:0.282, gauge:"custom", tags:"protectowire cti linear heat detector"},
-
-    {id:"cat3_24", name:"CAT3 / Telephone 24 AWG Pair", category:"Telephone / Data", ohms1000:25.67, gauge:"24", tags:"cat3 telephone station wire 24 awg voice data"},
-    {id:"cat5_24", name:"CAT5 / CAT5e 24 AWG Pair", category:"Network / Data", ohms1000:25.67, gauge:"24", tags:"cat5 cat5e network data ethernet 24 awg"},
-    {id:"cat6_23", name:"CAT6 23 AWG Pair", category:"Network / Data", ohms1000:20.36, gauge:"custom", tags:"cat6 network data ethernet 23 awg"},
-    {id:"security_22", name:"22 AWG Security / Control Cable", category:"Security / Controls", ohms1000:16.14, gauge:"22", tags:"22/2 22/4 security control alarm station"},
-    {id:"security_18", name:"18 AWG Security / Control Cable", category:"Security / Controls", ohms1000:6.385, gauge:"18", tags:"18/2 18/4 security control alarm power"},
-    {id:"thermostat_18", name:"18 AWG Thermostat / HVAC Cable", category:"Thermostat / HVAC", ohms1000:6.385, gauge:"18", tags:"thermostat hvac 18/2 18/5 18/8 control"}
+    {id:"security22", name:"22 AWG Security / Control Cable", category:"Security / Controls", ohms1000:16.14, gauge:"22", tags:"security control alarm 22/2 22/4 22 awg"},
+    {id:"security18", name:"18 AWG Security / Control Cable", category:"Security / Controls", ohms1000:6.385, gauge:"18", tags:"security control alarm 18/2 18/4 18 awg"},
+    {id:"thermostat18", name:"18 AWG Thermostat / HVAC Cable", category:"Thermostat / HVAC", ohms1000:6.385, gauge:"18", tags:"thermostat hvac 18/2 18/5 18/8 18 awg"},
+    {id:"cat5", name:"CAT5 / CAT5e 24 AWG Pair", category:"Network / Data", ohms1000:25.67, gauge:"24", tags:"cat cat5 cat5e ethernet network data 24 awg"},
+    {id:"cat6", name:"CAT6 23 AWG Pair", category:"Network / Data", ohms1000:20.36, gauge:"custom", tags:"cat cat6 ethernet network data 23 awg"}
   ];
   let customWire = null;
   const ALPHA = 0.00393;
@@ -217,7 +215,6 @@ Notes: ${item.notes || "None"}`;
     updateGps();
     calculate();
     screen("test");
-    setTimeout(() => $("ohms").focus(), 150);
   }
 
   function getGps() {
@@ -280,7 +277,7 @@ Notes: ${item.notes || "None"}`;
     const map = {
       short: "Dead Short",
       ground: "Ground Fault",
-      partial: "Partial / Resistive Fault",
+      partial: "Resistive Fault",
       open: "Open / Unknown"
     };
     return map[value] || "Dead Short";
@@ -296,27 +293,22 @@ Notes: ${item.notes || "None"}`;
 
   function renderWireLookup() {
     const query = ($("wireSearch").value || "").trim().toLowerCase();
-    const tokens = query.split(/\s+/).filter(Boolean);
-
     const results = WIRE_DB.filter(w => {
       const haystack = (w.name + " " + w.category + " " + w.tags).toLowerCase();
-      return tokens.length === 0 || tokens.every(token => haystack.includes(token));
-    }).slice(0, 20);
+      return !query || haystack.includes(query);
+    }).slice(0, 12);
 
     $("wireResults").innerHTML = results.map(w => {
       const ohms1000 = w.ohms1000 || (w.ohmsPerFt * 1000);
-      const note = w.ohmsPerFt
-        ? `${w.ohmsPerFt} Ω/ft (${ohms1000.toFixed(1)} Ω/1000 ft equivalent)`
-        : `${ohms1000} Ω/1000 ft`;
-      const haystack = (w.name + " " + w.category + " " + w.tags).toLowerCase();
-      const recommended = query && tokens.every(token => haystack.includes(token));
+      const note = w.ohmsPerFt ? `${w.ohmsPerFt} Ω/ft (${ohms1000.toFixed(1)} Ω/1000 ft)` : `${ohms1000} Ω/1000 ft`;
+      const recommended = query && (w.tags.toLowerCase().includes(query) || w.name.toLowerCase().includes(query));
       return `<div class="wire-card ${recommended ? "recommended" : ""}">
         <div class="wire-name">${escapeHtml(w.name)}</div>
         <div class="wire-meta">${escapeHtml(note)}</div>
         <span class="wire-pill">${escapeHtml(w.category)}</span>
         <button type="button" data-wire="${escapeHtml(w.id)}">Use This Wire</button>
       </div>`;
-    }).join("") || `<div class="no-results">No matching wire found. Try fewer words or use Custom Wire below.</div>`;
+    }).join("") || `<div class="muted">No matching wire found. Use Custom Wire below.</div>`;
 
     $("wireResults").querySelectorAll("[data-wire]").forEach(button => {
       button.addEventListener("click", () => useWire(button.dataset.wire));
@@ -326,6 +318,7 @@ Notes: ${item.notes || "None"}`;
   function useWire(wireId) {
     const w = WIRE_DB.find(item => item.id === wireId);
     if (!w) return;
+
     if (w.gauge && AWG[w.gauge]) {
       $("gauge").value = w.gauge;
       customWire = null;
@@ -338,10 +331,13 @@ Notes: ${item.notes || "None"}`;
         temperatureCompensated: false
       };
     }
+
     updateSelectedWireDisplay();
     calculate();
+    if ($("frontWireLookup")) $("frontWireLookup").classList.add("hidden");
     toast("Wire selected.");
     screen("test");
+    setTimeout(() => $("ohms").focus(), 150);
   }
 
   function applyCustomWire() {
@@ -363,6 +359,48 @@ Notes: ${item.notes || "None"}`;
   }
 
 
+
+  function searchWireDb(query) {
+    const q = (query || "").trim().toLowerCase();
+    const tokens = q.split(/\s+/).filter(Boolean);
+    return WIRE_DB.filter(w => {
+      const haystack = (w.name + " " + w.category + " " + w.tags).toLowerCase();
+      return tokens.length === 0 || tokens.every(token => haystack.includes(token));
+    }).slice(0, 18);
+  }
+
+  function wireCardHtml(w) {
+    const ohms1000 = w.ohms1000 || (w.ohmsPerFt * 1000);
+    const note = w.ohmsPerFt
+      ? `${w.ohmsPerFt} Ω/ft (${ohms1000.toFixed(1)} Ω/1000 ft equivalent)`
+      : `${ohms1000} Ω/1000 ft`;
+    return `<div class="wire-card">
+      <div class="wire-name">${escapeHtml(w.name)}</div>
+      <div class="wire-meta">${escapeHtml(note)}</div>
+      <span class="wire-pill">${escapeHtml(w.category)}</span>
+      <button type="button" data-front-wire="${escapeHtml(w.id)}">Use This Wire</button>
+    </div>`;
+  }
+
+  function renderFrontWireLookup() {
+    const query = $("wireSearchFront") ? $("wireSearchFront").value : "";
+    const results = searchWireDb(query);
+    const target = $("wireResultsFront");
+    if (!target) return;
+    target.innerHTML = results.length
+      ? results.map(wireCardHtml).join("")
+      : `<div class="no-results">No matching wire found. Try fewer words or use Custom Wire.</div>`;
+
+    target.querySelectorAll("[data-front-wire]").forEach(button => {
+      button.addEventListener("click", () => useWire(button.dataset.frontWire));
+    });
+  }
+
+  function setWireFilter(value) {
+    if ($("wireSearchFront")) $("wireSearchFront").value = value;
+    renderFrontWireLookup();
+  }
+
   function runSmartSelector() {
     const system = $("smartSystem").value;
     const gauge = $("smartGauge").value;
@@ -382,6 +420,7 @@ Notes: ${item.notes || "None"}`;
   function init() {
     $("refRows").innerHTML = Object.entries(AWG).map(([g, r]) => `<tr><td>${g} AWG</td><td>${r.toFixed(3)}</td><td>${(r * 2).toFixed(3)}</td></tr>`).join("");
     renderWireLookup();
+    renderFrontWireLookup();
     updateFaultIcon();
     updateSelectedWireDisplay();
     updateJobNumber();
@@ -403,7 +442,14 @@ Notes: ${item.notes || "None"}`;
       calculate();
     }));
 
-    $("chooseWireBtn").addEventListener("click", () => screen("ref"));
+    $("toggleWirePanel").addEventListener("click", () => {
+      $("frontWireLookup").classList.toggle("hidden");
+      renderFrontWireLookup();
+    });
+    $("wireSearchFront").addEventListener("input", renderFrontWireLookup);
+    document.querySelectorAll("[data-wirefilter]").forEach(button => {
+      button.addEventListener("click", () => setWireFilter(button.dataset.wirefilter));
+    });
     $("focusOhms").addEventListener("click", () => { $("ohms").focus(); $("ohms").select(); });
     $("clearBtn").addEventListener("click", () => { $("ohms").value = ""; $("length").value = ""; calculate(); $("ohms").focus(); });
     $("saveBtn").addEventListener("click", saveJob);
