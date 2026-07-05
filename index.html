@@ -22,7 +22,7 @@
       <h1>Fault Locator Pro</h1>
     </div>
   </div>
-  <div class="ver">v14</div>
+  <div class="ver">v15</div>
 </header>
 
 <main>
@@ -34,7 +34,9 @@
         <span id="faultLabel">NORMAL</span>
       </div>
       <div id="distance">-- ft</div>
-      <div id="status">Enter a meter reading</div>
+      <div class="lcd-segment-wrap">
+        <div id="lcdSegments" class="lcd-segments"></div>
+      </div>
     </div>
 
     <button type="button" id="wireChooser" class="wire-chooser">
@@ -63,11 +65,8 @@
           <option value="ground">Conductor to Ground</option>
         </select>
       </label>
-      <label>Expected Length
-        <select id="lengthBasis">
-          <option value="entered" selected>Use entered length</option>
-          <option value="estimate500">Estimate 500 ft</option>
-        </select>
+      <label>Estimated / Actual Length ft
+        <input id="length" type="number" inputmode="decimal" placeholder="Estimating 500 ft">
       </label>
     </div>
 
@@ -88,12 +87,9 @@
 
     <details class="options">
       <summary>Temperature, cable length & custom wire</summary>
-      <div class="grid">
+      <div class="grid single">
         <label>Wire Temp °F
           <input id="temp" type="number" inputmode="decimal" value="68">
-        </label>
-        <label>Cable Length ft
-          <input id="length" type="number" inputmode="decimal" placeholder="optional">
         </label>
       </div>
       <div class="chips">
@@ -169,8 +165,8 @@
 </section>
 
 <section id="help" class="screen">
-  <div class="card">
-    <h2>How to Test with a Digital Multimeter</h2>
+  <details class="card help-detail">
+    <summary>How to Test with a Digital Multimeter</summary>
     <ol>
       <li><strong>De-energize first.</strong> Turn the circuit off and verify no voltage is present before switching to ohms.</li>
       <li><strong>Isolate the cable.</strong> Disconnect both conductors from panels, modules, relays, EOL resistors, NAC appliances, detectors, and any connected equipment.</li>
@@ -182,8 +178,8 @@
     </ol>
   </div>
 
-  <div class="card">
-    <h2>Troubleshooting Faults</h2>
+  <details class="card help-detail">
+    <summary>Troubleshooting Faults</summary>
     <ul class="help-list">
       <li><strong>Dead short near test end:</strong> Very low ohms. Recheck meter lead zero, disconnect devices, inspect the first boxes, junctions, and terminations.</li>
       <li><strong>Ground fault:</strong> Test each conductor to ground. Look for staples, damaged jacket, wet boxes, conduit rub-through, shield/drain contact, or devices touching grounded metal.</li>
@@ -194,8 +190,8 @@
     </ul>
   </div>
 
-  <div class="card">
-    <h2>Klein ET450 Tracer Tips</h2>
+  <details class="card help-detail">
+    <summary>Klein ET450 Tracer Tips</summary>
     <ol>
       <li>The ET450 can trace energized or de-energized breakers, fuses, and wires.</li>
       <li>For de-energized tracing, isolate the cable and connect the transmitter leads to the target conductors as instructed by the Klein manual.</li>
@@ -207,8 +203,8 @@
     </ol>
   </div>
 
-  <div class="card">
-    <h2>Update History</h2>
+  <details class="card help-detail">
+    <summary>Update History</summary>
     <div class="update-log">
       <p><b>v14</b> Added automatic fault diagnosis, technician guidance, expanded DMM help, troubleshooting guide, and Klein ET450 section.</p>
       <p><b>v13</b> Rebuilt front-panel wire lookup, fixed fault type selector, lighter ohm input placeholder, added update history.</p>
@@ -216,7 +212,7 @@
       <p><b>v8-v9</b> Added instrument style, GPS, wire lookup, custom wire values, and job report tools.</p>
       <p><b>v1-v7</b> Initial calculator, temperature correction, PWA support, job history, and iPhone layout.</p>
     </div>
-  </div>
+  </details>
 </section>
 
 <section id="settings" class="screen">
