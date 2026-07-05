@@ -49,12 +49,7 @@ body.large input,body.large select,body.large button{min-height:68px;font-size:2
 .ohms-input::placeholder{font-size:15px;color:#bdbdbd;opacity:.45;font-weight:300}
 @media(max-width:440px){.mode-row{grid-template-columns:1fr}}
 
-/* v15 LCD retro/3D cleanup */
-.meter{
-  background:linear-gradient(145deg,#343434 0%,#181818 48%,#080808 100%);
-  border:1px solid #555;
-  box-shadow:0 22px 45px rgba(0,0,0,.55), inset 0 2px 2px rgba(255,255,255,.12), inset 0 -5px 12px rgba(0,0,0,.45);
-}
+/* v16 emergency-safe LCD and accordion polish */
 .display{
   background:
     linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,0) 24%),
@@ -62,14 +57,8 @@ body.large input,body.large select,body.large button{min-height:68px;font-size:2
     linear-gradient(180deg,#d9f5c2,#a8c98e);
   border:5px solid #111;
   box-shadow:inset 0 0 18px rgba(0,0,0,.35), inset 0 3px 7px rgba(255,255,255,.35), 0 3px 0 #000;
-  text-shadow:0 1px 0 rgba(255,255,255,.25);
-}
-.auto-fault{
-  color:#06140a;
-  box-shadow:inset 0 1px 3px rgba(255,255,255,.45), inset 0 -1px 3px rgba(0,0,0,.12);
 }
 #distance{
-  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
   color:#10220f;
   text-shadow:1px 1px 0 rgba(255,255,255,.18), -1px -1px 0 rgba(0,0,0,.08);
 }
@@ -77,14 +66,9 @@ body.large input,body.large select,body.large button{min-height:68px;font-size:2
 .lcd-segments{display:grid;grid-template-columns:repeat(20,1fr);gap:3px}
 .lcd-segments span{height:12px;border-radius:3px;background:rgba(20,45,20,.18);box-shadow:inset 0 1px 2px rgba(0,0,0,.25)}
 .lcd-segments span.on{background:#183d16;box-shadow:0 0 4px rgba(24,61,22,.28), inset 0 1px 1px rgba(255,255,255,.16)}
-.card,.wire-panel,.wire-card{
+.card,.wire-panel,.wire-card,.meter{
   box-shadow:0 10px 22px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.06);
 }
-button,input,select,textarea{
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 2px 0 rgba(0,0,0,.32);
-}
-button:active{transform:translateY(1px);box-shadow:inset 0 1px 4px rgba(0,0,0,.35)}
-.grid.single{grid-template-columns:1fr}
 .help-detail summary{
   list-style:none;
   cursor:pointer;

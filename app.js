@@ -3,8 +3,8 @@
 
 const AWG = {"14":2.525,"16":4.016,"18":6.385,"22":16.14,"24":25.67};
 const ALPHA = 0.00393;
-const JOBS = "fault_locator_v15_jobs";
-const SETTINGS = "fault_locator_v15_settings";
+const JOBS = "fault_locator_v16_jobs";
+const SETTINGS = "fault_locator_v16_settings";
 let selectedWire = {name:"22 AWG Solid Copper", gauge:"22", ohms1000:16.14, isLoopValue:false, tempComp:true};
 let gpsData = null;
 
@@ -36,13 +36,17 @@ const makeId = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now()+"-"+M
 function expectedLoopOhms(){
   const tempF = read("temp");
   const lengthEntered = read("length");
+  const basis = $("lengthBasis") ? $("lengthBasis").value : "entered";
   const length = Number.isFinite(lengthEntered) && lengthEntered > 0 ? lengthEntered : 500;
+  const diagnosis = diagnose(ohms);
+  updateDiagnosisUI(diagnosis);
+
   const tempC = (tempF - 32) * 5 / 9;
   const tempFactor = selectedWire.tempComp ? (1 + ALPHA * (tempC - 20)) : 1;
   const calFactor = 1 + (read("calibration") || 0) / 100;
   const conductorPerFt = (selectedWire.ohms1000 / 1000) * tempFactor * calFactor;
   const loopPerFt = selectedWire.isLoopValue ? conductorPerFt : conductorPerFt * 2;
-  return {length, loopPerFt, expected: loopPerFt * length, estimated: !(Number.isFinite(lengthEntered) && lengthEntered > 0)};
+  return {length, loopPerFt, expected: loopPerFt * length, estimated: !(Number.isFinite(lengthEntered) && lengthEntered > 0) || basis === "estimate500"};
 }
 
 function diagnose(ohms){
@@ -130,7 +134,7 @@ function updateSegments(distance){
 function updateDiagnosisUI(d){
   $("faultIcon").textContent = d.icon;
   $("faultLabel").textContent = d.label;
-  $("status").textContent = d.label;
+  /* bottom status removed in v16 */
   $("guidanceText").innerHTML = `<span class="${d.level === "good" ? "good" : d.level === "bad" ? "bad" : "warn-text"}">${d.label}:</span> ${d.guidance}`;
 }
 
@@ -147,7 +151,6 @@ function calculate(){
     const d = diagnose(ohms);
     updateDiagnosisUI(d);
     blank();
-    updateSegments(0);
     return null;
   }
 
@@ -165,7 +168,7 @@ function calculate(){
 
   $("distance").textContent = fmt(distance,1)+" ft";
   updateSegments(distance);
-  $("status").textContent = diagnosis.label;
+  /* bottom status removed in v16 */
   $("range").textContent = Math.max(0,distance-tolerance).toFixed(0)+"–"+(distance+tolerance).toFixed(0)+" ft";
   $("tempAdj").textContent = (tempAdjust>=0?"+":"")+fmt(tempAdjust,1)+"%";
 
@@ -285,7 +288,6 @@ function screen(name){
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   $(name).classList.add("active");
   document.querySelector(`[data-screen="${name}"]`).classList.add("active");
-  if (name !== "help") document.querySelectorAll("#help details").forEach(d=>d.open=false);
   if (name === "history") renderHistory();
 }
 
@@ -331,6 +333,7 @@ function init(){
 
   $("gauge").addEventListener("change",()=>{ selectedWire={name:$("gauge").value+" AWG Solid Copper",gauge:$("gauge").value,ohms1000:AWG[$("gauge").value],isLoopValue:false,tempComp:true}; updateSelectedWireUI(); calculate(); });
   $("testMode").addEventListener("change",calculate);
+  $("lengthBasis").addEventListener("change",calculate);
   document.querySelectorAll("input,textarea").forEach(el=>el.addEventListener("input",()=>{ calculate(); if(el.id==="calibration")saveSettings(); }));
   $("useCustom").addEventListener("click",()=>{ const oh=read("customOhms"); if(!Number.isFinite(oh)||oh<=0){toast("Enter valid Ω / 1000 ft");return;} selectedWire={name:$("customName").value.trim()||"Custom Wire",gauge:"custom",ohms1000:oh,isLoopValue:false,tempComp:false}; updateSelectedWireUI(); calculate(); toast("Custom wire selected"); });
   $("clearBtn").addEventListener("click",()=>{ $("ohms").value=""; $("length").value=""; calculate(); $("ohms").focus(); });
