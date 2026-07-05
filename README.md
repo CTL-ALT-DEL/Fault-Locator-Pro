@@ -5,6 +5,7 @@ and low-voltage technicians to estimate the distance to a short circuit
 in a two-conductor solid copper cable.
 Fault Locator Pro
 
+
 The app calculates the estimated fault location by using:
 
 -   Wire gauge (AWG)
