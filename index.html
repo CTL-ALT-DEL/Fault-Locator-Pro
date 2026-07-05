@@ -7,28 +7,30 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Fault Locator">
 <meta name="theme-color" content="#070707">
-<title>Fault Locator Pro</title>
+<title>Fault Locator Pro 2.0</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<div id="boot" class="boot"><div class="boot-box"><div class="boot-title">FAULT LOCATOR PRO</div><div class="boot-sub">Professional Edition</div><div id="bootLine">Initializing...</div></div></div>
 <div id="app">
 <header>
   <div class="brand">
     <div class="logo">FL</div>
     <div>
       <div class="eyebrow">Cable Fault Field Instrument</div>
-      <h1>Fault Locator Pro</h1>
+      <h1>Fault Locator Pro 2.0</h1>
     </div>
   </div>
-  <div class="ver">v17</div>
+  <div class="ver">v18</div>
 </header>
 
 <main>
 <section id="test" class="screen active">
   <div class="meter">
     <div class="display">
+      <div class="lcd-top"><span id="ohmMini">0.00 Ω</span><span class="battery"><i></i></span></div>
       <div class="auto-fault">
         <span id="faultIcon">✓</span>
         <span id="faultLabel">NORMAL</span>
@@ -37,6 +39,7 @@
       <div class="lcd-segment-wrap">
         <div id="lcdSegments" class="lcd-segments"></div>
       </div>
+      <div class="confidence-line"><span>Confidence</span><div class="confidence-track"><div id="confidenceFill"></div></div><b id="confidencePct">--</b></div>
     </div>
 
     <button type="button" id="wireChooser" class="wire-chooser">
@@ -119,6 +122,8 @@
     <div id="guidanceText" class="guidance">Enter a meter reading and the app will suggest next steps.</div>
   </div>
 
+  <div class="card score-card"><h2>Cable Health</h2><div class="health-row"><b id="healthScore">--</b><span>/ 100</span></div><p id="healthText" class="muted">No reading yet.</p></div>
+
   <details class="card">
     <summary>Fault position details</summary>
     <div class="scale-labels"><span>Test End</span><span id="farLabel">Far End</span></div>
@@ -142,6 +147,8 @@
     <h2>Job Report</h2>
     <label>Customer / Site<input id="customer" placeholder="optional"></label>
     <label>Cable ID / Location<input id="cableId" placeholder="optional"></label>
+    <label>Photo<input id="photoInput" type="file" accept="image/*" capture="environment"></label>
+    <div id="photoStatus" class="muted">No photo attached.</div>
     <label>Notes<textarea id="notes" rows="4" placeholder="optional"></textarea></label>
     <button id="gpsBtn" type="button" class="primary">Use GPS Location</button>
     <p id="gpsStatus" class="muted">GPS not saved.</p>
@@ -160,6 +167,7 @@
 </section>
 
 <section id="ref" class="screen">
+  <div class="card"><h2>Favorites</h2><div id="favoritesList" class="wire-results"></div></div>
   <div class="card">
     <h2>Wire Reference</h2>
     <table><thead><tr><th>Wire</th><th>Resistance</th></tr></thead><tbody id="refRows"></tbody></table>
@@ -169,6 +177,8 @@
     <pre id="math"></pre>
   </details>
 </section>
+
+<section id="tools" class="screen"><div class="card"><h2>Extra Tools</h2><button id="beepBtn" type="button" class="primary">Beep / Click</button><button id="flashBtn" type="button">Flashlight Mode</button><p class="muted">iPhone Safari may not allow direct torch control. This provides a bright-screen work light.</p><div id="workLight" class="work-light hidden">WORK LIGHT</div></div></section>
 
 <section id="help" class="screen">
   <details class="card help-detail">
@@ -235,6 +245,7 @@
   <button class="tab" data-screen="job" type="button">Job</button>
   <button class="tab" data-screen="history" type="button">Log</button>
   <button class="tab" data-screen="ref" type="button">Ref</button>
+  <button class="tab" data-screen="tools" type="button">Tools</button>
   <button class="tab" data-screen="help" type="button">Help</button>
   <button class="tab" data-screen="settings" type="button">Set</button>
 </nav>

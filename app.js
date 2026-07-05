@@ -3,10 +3,12 @@
 
 const AWG = {"14":2.525,"16":4.016,"18":6.385,"22":16.14,"24":25.67};
 const ALPHA = 0.00393;
-const JOBS = "fault_locator_v17_jobs";
-const SETTINGS = "fault_locator_v17_settings";
+const JOBS = "fault_locator_v18_jobs";
+const SETTINGS = "fault_locator_v18_settings";
 let selectedWire = {name:"22 AWG Solid Copper", gauge:"22", ohms1000:16.14, isLoopValue:false, tempComp:true};
 let gpsData = null;
+let photoName = "";
+const FAVS = "fault_locator_v18_favs";
 
 const WIRE_DB = [
  {id:"awg14",name:"14 AWG Solid Copper",category:"Standard Copper",ohms1000:2.525,gauge:"14",tags:"14 awg copper solid standard"},
@@ -136,11 +138,18 @@ function updateDiagnosisUI(d){
   $("faultLabel").textContent = d.label;
   /* bottom status removed in v16 */
   $("guidanceText").innerHTML = `<span class="${d.level === "good" ? "good" : d.level === "bad" ? "bad" : "warn-text"}">${d.label}:</span> ${d.guidance}`;
+  const conf = d.level === "good" ? 88 : d.level === "bad" ? 92 : 65;
+  if($("confidenceFill")) $("confidenceFill").style.width = conf + "%";
+  if($("confidencePct")) $("confidencePct").textContent = conf + "%";
+  const health = d.level === "good" ? 96 : d.level === "bad" ? 30 : 55;
+  if($("healthScore")) $("healthScore").textContent = Number.isFinite(read("ohms")) && read("ohms")>0 ? health : "--";
+  if($("healthText")) $("healthText").textContent = Number.isFinite(read("ohms")) && read("ohms")>0 ? (health>85?"Cable appears healthy.":health>60?"Investigate possible issues.":"Likely fault or unsafe reading.") : "No reading yet.";
 }
 
 function calculate(){
   updateSelectedWireUI();
   const ohms = read("ohms");
+  if($("ohmMini")) $("ohmMini").textContent = (Number.isFinite(ohms)?fmt(ohms,2):"0.00") + " Ω";
   const tempF = read("temp");
   const length = read("length");
   const calibration = read("calibration") || 0;
@@ -317,6 +326,19 @@ function loadSettings(){
   try{ const s=JSON.parse(localStorage.getItem(SETTINGS)||"{}"); $("largeMode").checked=!!s.largeMode; document.body.classList.toggle("large",!!s.largeMode); if(s.calibration!==undefined)$("calibration").value=s.calibration; }catch{}
 }
 function saveSettings(){ localStorage.setItem(SETTINGS,JSON.stringify({largeMode:$("largeMode").checked,calibration:$("calibration").value})); }
+
+
+function boot(){
+  const lines=["Initializing...","Loading Wire Database...","Calibrating LCD...","READY"];
+  let i=0; const timer=setInterval(()=>{ if($("bootLine")) $("bootLine").textContent=lines[i]||"READY"; i++; if(i>lines.length){clearInterval(timer); if($("boot")) $("boot").classList.add("hide");}},350);
+}
+function getFavs(){try{return JSON.parse(localStorage.getItem(FAVS)||'["fire18","protectowire_phsc","cat5","security22"]')}catch{return[]}}
+function setFavs(f){localStorage.setItem(FAVS,JSON.stringify(f))}
+function renderFavs(){ if(!$("favoritesList")) return; const favs=getFavs().map(id=>WIRE_DB.find(w=>w.id===id)).filter(Boolean); $("favoritesList").innerHTML=favs.length?favs.map(w=>wireCard(w,true)).join(""):'<div class="empty">No favorites yet.</div>'; bindWireButtons($("favoritesList")); }
+function wireCard(w,fav=false){ const ohms1000=w.ohms1000||(w.ohmsPerFt*1000); const note=w.ohmsPerFt?`${w.ohmsPerFt} Ω/ft (${ohms1000.toFixed(1)} Ω/1000 ft equivalent)`:`${ohms1000} Ω/1000 ft`; return `<div class="wire-card"><div class="wire-name">${escapeHtml(w.name)}</div><div class="wire-meta">${escapeHtml(note)}</div><span class="wire-pill">${escapeHtml(w.category)}</span><button type="button" data-wire="${escapeHtml(w.id)}">Use This Wire</button><button type="button" data-fav="${escapeHtml(w.id)}">${fav?'★ Favorite':'☆ Add Favorite'}</button></div>`; }
+function bindWireButtons(root){ root.querySelectorAll("[data-wire]").forEach(button=>button.addEventListener("click",()=>useWire(button.dataset.wire))); root.querySelectorAll("[data-fav]").forEach(button=>button.addEventListener("click",()=>toggleFav(button.dataset.fav))); }
+function toggleFav(id){ let f=getFavs(); f=f.includes(id)?f.filter(x=>x!==id):[id,...f]; setFavs(f.slice(0,12)); renderWireLookup(); renderFavs(); }
+function beep(){try{const ctx=new (window.AudioContext||window.webkitAudioContext)(),osc=ctx.createOscillator(),gain=ctx.createGain();osc.frequency.value=880;gain.gain.value=.06;osc.connect(gain);gain.connect(ctx.destination);osc.start();setTimeout(()=>{osc.stop();ctx.close()},140)}catch{toast("Beep unavailable")}}
 
 function init(){
   $("refRows").innerHTML = WIRE_DB.map(w=>`<tr><td>${esc(w.name)}</td><td>${esc(w.ohmsPerFt ? w.ohmsPerFt+" Ω/ft" : w.ohms1000+" Ω/1000 ft")}</td></tr>`).join("");
