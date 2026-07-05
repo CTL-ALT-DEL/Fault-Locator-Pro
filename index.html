@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Fault Locator">
-<meta name="theme-color" content="#101010">
+<meta name="theme-color" content="#0b0b0b">
 <title>Fault Locator Pro</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
@@ -16,25 +16,25 @@
 <div id="app">
 <header>
   <div class="brand">
-    <div class="mark">FL</div>
+    <div class="logo">FL</div>
     <div>
-      <div class="overline">Copper Loop Tester</div>
-      <h1>Fault Locator</h1>
+      <div class="eyebrow">Solid Copper Loop Test</div>
+      <h1>Fault Locator Pro</h1>
     </div>
   </div>
-  <div class="v">PRO v6</div>
+  <div class="ver">v7</div>
 </header>
 
 <main>
-<section id="calc" class="screen active">
-  <div class="tester">
-    <div class="screenbox">
-      <div class="screenlabel">DISTANCE TO SHORT</div>
-      <div id="distance" class="big">-- ft</div>
-      <div id="status" class="status">Enter wire gauge and meter reading</div>
+<section id="test" class="screen active">
+  <div class="meter">
+    <div class="display">
+      <div class="display-label">DISTANCE TO SHORT</div>
+      <div id="distance">-- ft</div>
+      <div id="status">Enter gauge and meter reading</div>
     </div>
 
-    <div class="inputs">
+    <div class="grid">
       <label>Wire Gauge
         <select id="gauge">
           <option value="14">14 AWG</option>
@@ -49,9 +49,9 @@
       </label>
     </div>
 
-    <details class="advanced">
+    <details>
       <summary>Options</summary>
-      <div class="inputs smallgrid">
+      <div class="grid">
         <label>Wire Temp °F
           <input id="temp" type="number" inputmode="decimal" value="68">
         </label>
@@ -60,20 +60,20 @@
         </label>
       </div>
       <div class="chips">
-        <button data-temp="32">32°</button>
-        <button data-temp="68" class="picked">68°</button>
-        <button data-temp="90">90°</button>
-        <button data-temp="120">120°</button>
+        <button type="button" data-temp="32">32°</button>
+        <button type="button" data-temp="68" class="picked">68°</button>
+        <button type="button" data-temp="90">90°</button>
+        <button type="button" data-temp="120">120°</button>
       </div>
     </details>
   </div>
 
-  <div id="warn" class="warn hidden"></div>
+  <div id="warning" class="warning hidden"></div>
 
   <details class="card">
-    <summary>Fault details</summary>
+    <summary>Fault Details</summary>
     <div class="bar"><div id="fill"></div></div>
-    <div id="barText" class="muted">Enter cable length for position bar.</div>
+    <p id="barText" class="muted">Enter cable length for position bar.</p>
     <div class="metrics">
       <div><span>Range</span><b id="range">--</b></div>
       <div><span>Remaining</span><b id="remaining">--</b></div>
@@ -82,8 +82,8 @@
   </details>
 
   <div class="actions">
-    <button id="clear">Clear</button>
-    <button id="save">Save</button>
+    <button id="clearBtn" type="button">Clear</button>
+    <button id="saveBtn" type="button" class="primary">Save Job</button>
   </div>
 </section>
 
@@ -93,15 +93,15 @@
     <label>Customer / Site<input id="customer" placeholder="optional"></label>
     <label>Cable ID / Location<input id="cableId" placeholder="optional"></label>
     <label>Notes<textarea id="notes" rows="4" placeholder="optional"></textarea></label>
-    <button id="gps">Use GPS Location</button>
+    <button id="gpsBtn" type="button" class="primary">Use GPS Location</button>
     <p id="gpsStatus" class="muted">GPS not saved.</p>
-    <button id="copy">Copy Report</button>
+    <button id="copyBtn" type="button" class="primary">Copy Report</button>
   </div>
 </section>
 
 <section id="history" class="screen">
   <div class="card">
-    <div class="topline"><h2>History</h2><button id="clearHistory" class="mini">Clear</button></div>
+    <div class="headrow"><h2>History</h2><button id="clearHistoryBtn" class="mini" type="button">Clear</button></div>
     <div id="historyList" class="empty">No saved jobs yet.</div>
   </div>
 </section>
@@ -112,21 +112,21 @@
     <table><thead><tr><th>Gauge</th><th>Ω/1000 ft</th><th>Loop</th></tr></thead><tbody id="refRows"></tbody></table>
   </div>
   <details class="card">
-    <summary>Show math</summary>
+    <summary>Show Math</summary>
     <pre id="math"></pre>
   </details>
 </section>
 
 <section id="help" class="screen">
   <div class="card">
-    <h2>Test Procedure</h2>
+    <h2>How to Test</h2>
     <ol>
       <li>Turn power off and verify no voltage is present.</li>
-      <li>Disconnect both conductors from all equipment.</li>
-      <li>Set meter to ohms.</li>
-      <li>Short meter leads and use REL/Zero if available.</li>
-      <li>Measure across the two wires at one end.</li>
-      <li>Enter the loop resistance reading.</li>
+      <li>Disconnect both conductors from all devices and equipment.</li>
+      <li>Set your digital multimeter to ohms.</li>
+      <li>Short the meter leads and use REL/Zero if available.</li>
+      <li>Measure across the two conductors at the same end.</li>
+      <li>Enter the loop resistance into the app.</li>
     </ol>
   </div>
 </section>
@@ -134,9 +134,9 @@
 <section id="settings" class="screen">
   <div class="card">
     <h2>Settings</h2>
-    <label class="check"><input id="glove" type="checkbox"> Large control mode</label>
+    <label class="check"><input id="largeMode" type="checkbox"> Large control mode</label>
     <label>Calibration %
-      <input id="cal" type="number" inputmode="decimal" step="0.1" value="0">
+      <input id="calibration" type="number" inputmode="decimal" step="0.1" value="0">
     </label>
     <p class="muted">Calibration adjusts the copper resistance table after testing against a known length.</p>
   </div>
@@ -144,12 +144,12 @@
 </main>
 
 <nav>
-  <button class="nav active" data-screen="calc">Test</button>
-  <button class="nav" data-screen="job">Job</button>
-  <button class="nav" data-screen="history">Log</button>
-  <button class="nav" data-screen="ref">Ref</button>
-  <button class="nav" data-screen="help">Help</button>
-  <button class="nav" data-screen="settings">Set</button>
+  <button class="tab active" data-screen="test" type="button">Test</button>
+  <button class="tab" data-screen="job" type="button">Job</button>
+  <button class="tab" data-screen="history" type="button">Log</button>
+  <button class="tab" data-screen="ref" type="button">Ref</button>
+  <button class="tab" data-screen="help" type="button">Help</button>
+  <button class="tab" data-screen="settings" type="button">Set</button>
 </nav>
 </div>
 <div id="toast" class="toast hidden"></div>

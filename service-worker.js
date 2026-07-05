@@ -1,1 +1,5 @@
-const CACHE="fault-locator-pro-v6";const FILES=["./","index.html","styles.css","app.js","manifest.json","icons/icon-180.png","icons/icon-192.png","icons/icon-512.png"];self.addEventListener("install",e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)))});self.addEventListener("activate",e=>{clients.claim();e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))))});self.addEventListener("fetch",e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));
+const CACHE_NAME = "fault-locator-pro-v7";
+const FILES = ["./","index.html","styles.css","app.js","manifest.json","icons/icon-180.png","icons/icon-192.png","icons/icon-512.png"];
+self.addEventListener("install", event => { self.skipWaiting(); event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(FILES))); });
+self.addEventListener("activate", event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))))); self.clients.claim(); });
+self.addEventListener("fetch", event => { event.respondWith(caches.match(event.request).then(response => response || fetch(event.request))); });
