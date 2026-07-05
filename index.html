@@ -1,254 +1,207 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Fault Locator">
-<meta name="theme-color" content="#070707">
-<title>Fault Locator Pro</title>
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/icon-180.png">
-<link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Fault Locator">
+  <meta name="theme-color" content="#050505">
+  <title>Fault Locator Pro 2.0</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/icons/icon-180.png">
+  <link rel="stylesheet" href="src/ui/styles.css">
 </head>
 <body>
 <div id="app">
-<header>
-  <div>
-    
-    <h1>Fault Locator Pro</h1>
-  </div>
-  <div class="ver">v27</div>
-</header>
+  <header class="topbar">
+    <div>
+      <h1>Fault Locator Pro</h1>
+      <div class="sub">Professional Diagnostic System</div>
+    </div>
+    <div class="version">2.0.0</div>
+  </header>
 
-<main>
-<section id="test" class="screen active">
-  <div class="meter compact">
-    <div class="lcd">
-      <div class="lcd-top">
-        <span id="ohmMini">0.00 Ω</span>
-        <span class="battery"><i></i></span>
-      </div>
-      <div class="lcd-main-row">
-        <div class="meter-fault-icon"><span id="faultIcon">✓</span></div>
-        <div class="lcd-center">
-          <b id="faultLabel" class="fault-label">READY</b>
-          <div id="distance" class="distance idle">SELECT WIRE<br>ENTER OHMS</div>
+  <main>
+    <section id="screen-test" class="screen active">
+      <div class="instrument">
+        <div class="lcd">
+          <div class="lcd-top">
+            <span id="lcd-ohms">0.00 Ω</span>
+            <span id="battery" class="battery"><i></i></span>
+          </div>
+          <div class="lcd-body">
+            <div id="fault-icon" class="fault-icon">✓</div>
+            <div class="readout">
+              <div id="fault-label" class="fault-label">READY</div>
+              <div id="distance-readout" class="distance idle">SELECT WIRE<br>ENTER OHMS</div>
+            </div>
+          </div>
+          <div class="distance-bar-row">
+            <span>DISTANCE</span>
+            <div id="distance-bar" class="distance-bar"></div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button id="wire-button" class="wire-button" type="button">
+            <span>Wire</span>
+            <b id="wire-name">22 AWG solid copper</b>
+          </button>
+
+          <label>Ohms
+            <input id="input-ohms" type="number" inputmode="decimal" step="0.001" placeholder="enter Ω">
+          </label>
+
+          <label>Length
+            <input id="input-length" type="number" inputmode="decimal" placeholder="500 est.">
+          </label>
+
+          <label>Mode
+            <select id="input-mode">
+              <option value="pair">Pair</option>
+              <option value="ground">Ground</option>
+            </select>
+          </label>
+
+          <label>Temp
+            <input id="input-temp" type="number" inputmode="decimal" value="68">
+          </label>
+
+          <button id="button-clear" type="button">Clear</button>
+          <button id="button-save" class="primary" type="button">Save</button>
+        </div>
+
+        <div id="wire-panel" class="wire-panel hidden">
+          <input id="wire-search" type="search" placeholder="Search wire">
+          <div class="filter-row">
+            <button data-wire-filter="" type="button">All</button>
+            <button data-wire-filter="fire" type="button">Fire</button>
+            <button data-wire-filter="data" type="button">Data</button>
+            <button data-wire-filter="protectowire" type="button">Protectowire</button>
+          </div>
+          <div id="wire-results" class="wire-results"></div>
         </div>
       </div>
-      <div class="signal-row">
-        <span>DISTANCE</span>
-        <div id="lcdSegments" class="segments"></div>
+
+      <div class="diagnostic-card">
+        <div class="card-title">AI Technician</div>
+        <div id="guidance">Select a wire and enter an ohm reading.</div>
+        <div class="mini-meters">
+          <div><span>Confidence</span><b id="confidence">--</b></div>
+          <div><span>Health</span><b id="health">--</b></div>
+          <div><span>Basis</span><b id="basis">500 ft</b></div>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <div class="compact-grid">
-      <button id="wireBtn" type="button" class="wire-btn">
-        <span>Wire</span><b id="selectedWire">22 AWG Solid Copper</b>
-      </button>
-
-      <label>Ω Reading
-        <input id="ohms" type="number" inputmode="decimal" step="0.001" placeholder="ohms">
-      </label>
-
-      <label>Length ft
-        <input id="length" type="number" inputmode="decimal" placeholder="500 est.">
-      </label>
-
-      <label>Gauge
-        <select id="gauge">
-          <option value="14">14</option>
-          <option value="16">16</option>
-          <option value="18">18</option>
-          <option value="22" selected>22</option>
-          <option value="24">24</option>
-        </select>
-      </label>
-    </div>
-
-    <div id="wirePanel" class="wire-panel hidden">
-      <input id="wireSearch" placeholder="Search wire">
-      <div class="filters">
-        <button data-filter="" type="button">All</button>
-        <button data-filter="fire" type="button">Fire</button>
-        <button data-filter="cat" type="button">Data</button>
-        <button data-filter="protectowire" type="button">Protectowire</button>
+    <section id="screen-jobs" class="screen">
+      <div class="card">
+        <div class="head-row">
+          <h2>Diagnostic Timeline</h2>
+          <button id="clear-jobs" type="button">Clear</button>
+        </div>
+        <svg id="timeline-chart" viewBox="0 0 320 150" preserveAspectRatio="none"></svg>
+        <p id="timeline-insight" class="muted">Save readings to build a diagnostic trend.</p>
+        <div id="job-list" class="job-list"></div>
       </div>
-      <div id="wireResults"></div>
-    </div>
+    </section>
 
-    <div class="mini-row">
-      <label>Mode
-        <select id="testMode">
-          <option value="pair">Pair</option>
-          <option value="ground">Ground</option>
-        </select>
-      </label>
-      <label>Temp °F
-        <input id="temp" type="number" inputmode="decimal" value="68">
-      </label>
-      <button id="clearBtn" type="button">Clear</button>
-      <button id="saveBtn" type="button" class="primary">Save</button>
-    </div>
-  </div>
+    <section id="screen-cable" class="screen">
+      <div class="card">
+        <h2>Cable Run Builder</h2>
+        <p class="muted">Add known field points. Future builds will map the calculated fault to the nearest section.</p>
+        <div class="segment-inputs">
+          <input id="segment-name" placeholder="Device or box name">
+          <input id="segment-feet" type="number" inputmode="decimal" placeholder="feet from previous">
+          <button id="add-segment" class="primary" type="button">Add</button>
+        </div>
+        <div id="cable-map" class="cable-map"></div>
+      </div>
+    </section>
 
-  <div class="guidance-card">
-    <div id="guidanceText">Enter a meter reading for guidance.</div>
-    <div class="pro-strip">
-      <div><span>Health</span><b id="healthMini">--</b></div>
-      <div><span>Signal</span><b id="signalMini">--</b></div>
-      <div><span>Mode</span><b id="modeMini">PAIR</b></div>
-    </div>
-  </div>
-</section>
+    <section id="screen-help" class="screen">
+      <details class="card help-block">
+        <summary>DMM field procedure</summary>
+        <ol>
+          <li>Verify AC and DC voltage are absent before using resistance mode.</li>
+          <li>Disconnect both conductors from panels, modules, devices, EOL resistors, and surge protectors.</li>
+          <li>Zero the meter leads with REL/Zero if available.</li>
+          <li>Measure conductor-to-conductor for a pair short or loop test.</li>
+          <li>Measure each conductor to ground, conduit, shield, or drain wire for ground faults.</li>
+          <li>Reverse-test from the far end when possible to confirm the suspected location.</li>
+        </ol>
+      </details>
 
-<section id="job" class="screen">
-  <div class="card">
-    <h2>Job</h2>
-    <label>Customer<input id="customer"></label>
-    <label>Cable ID<input id="cableId"></label>
-    <label>Notes<textarea id="notes" rows="3"></textarea></label>
-    <button id="gpsBtn" type="button" class="primary">GPS</button>
-    <p id="gpsStatus" class="muted">GPS not saved.</p>
-    <button id="copyBtn" type="button">Copy Report</button>
-  </div>
-</section>
+      <details class="card help-block">
+        <summary>Fire alarm troubleshooting</summary>
+        <ul>
+          <li><b>Dead short:</b> inspect recently serviced devices, splices, crushed cable, staples, and NAC appliances.</li>
+          <li><b>Ground fault:</b> check wet boxes, conduit edges, shields, drain wires, metal backboxes, and damaged jackets.</li>
+          <li><b>High resistance:</b> look for corrosion, loose splices, water intrusion, or devices still connected.</li>
+          <li><b>SLC circuits:</b> isolate sections and remove modules or suppressors before resistance testing.</li>
+          <li><b>NAC circuits:</b> remove EOL resistors and notification appliances before distance testing.</li>
+        </ul>
+      </details>
 
-<section id="history" class="screen">
-  <div class="card">
-    <div class="head"><h2>Diagnostic Timeline</h2><button id="clearHistory" type="button">Clear</button></div>
-    <div class="timeline-card">
-      <div class="chart-title">Distance Trend</div>
-      <svg id="timelineChart" viewBox="0 0 320 150" preserveAspectRatio="none"></svg>
-      <div id="timelineInsight" class="muted">Save multiple readings to build a trend.</div>
-    </div>
-    <div id="historyList" class="empty">No saved jobs.</div>
-  </div>
-</section>
+      <details class="card help-block">
+        <summary>Klein ET450 workflow</summary>
+        <ol>
+          <li>Use this app first to estimate the target distance.</li>
+          <li>Isolate the cable and connect the tracer transmitter to the target conductors.</li>
+          <li>Start with low receiver sensitivity and increase only as needed.</li>
+          <li>Trace toward the calculated distance and inspect nearby boxes and splices.</li>
+          <li>Use NCV only as an alert and confirm voltage with a meter.</li>
+        </ol>
+      </details>
 
-<section id="help" class="screen">
-  <details class="card help-detail">
-    <summary>Digital Multimeter Field Procedure</summary>
-    <ol>
-      <li><strong>Stop and verify safety.</strong> Never measure resistance on an energized circuit. Test AC and DC voltage first.</li>
-      <li><strong>Isolate the cable.</strong> Disconnect conductors from panels, power supplies, modules, relays, EOL resistors, NAC appliances, detector bases, pull stations, and surge devices.</li>
-      <li><strong>Remove parallel paths.</strong> A connected device, resistor, shield, drain wire, or grounded conduit can make the reading look like a cable fault.</li>
-      <li><strong>Zero the meter leads.</strong> Short the probes together and use REL/Zero. If the meter reads 0.2 Ω with the leads shorted, subtract that from very low readings.</li>
-      <li><strong>Across-pair test.</strong> Measure conductor-to-conductor for a dead short or loop reading.</li>
-      <li><strong>Ground-fault test.</strong> Measure each conductor to ground, conduit, shield, drain wire, or grounded metal.</li>
-      <li><strong>Reverse-test if possible.</strong> If you can access both ends, measure from the opposite end. A single clean fault should roughly agree with the calculated location.</li>
-      <li><strong>Document the test.</strong> Save the reading, wire type, GPS, notes, and suspected location.</li>
-    </ol>
-  </details>
+      <details class="card help-block">
+        <summary>Resistor color chart</summary>
+        <table class="resistor-table">
+          <thead><tr><th>Color</th><th>Digit</th><th>Multiplier</th><th>Tol.</th></tr></thead>
+          <tbody id="resistor-table"></tbody>
+        </table>
+      </details>
+    </section>
 
-  <details class="card help-detail">
-    <summary>Fire Alarm Fault Troubleshooting</summary>
-    <ul class="help-list">
-      <li><strong>Ground fault:</strong> Check metal backboxes, conduit bushings, wet areas, shield/drain contact, staples, ceiling grid contact, and device mounting screws.</li>
-      <li><strong>Dead short:</strong> Inspect near the calculated distance, first junction box, recently serviced devices, crushed cable, splice points, and NAC appliances.</li>
-      <li><strong>High resistance:</strong> Look for corrosion, water intrusion, loose wire nuts, burned contacts, bad terminals, damaged conductors, or devices still connected.</li>
-      <li><strong>Intermittent fault:</strong> Wiggle devices and junctions while watching the meter. Moisture and vibration often produce changing resistance.</li>
-      <li><strong>Class A loop:</strong> Break the loop and test each leg separately. Do not assume both paths are fault-free.</li>
-      <li><strong>SLC circuit:</strong> Remove modules or isolate sections. Addressable devices and surge suppressors can distort resistance readings.</li>
-      <li><strong>NAC circuit:</strong> Remove EOL resistor and notification appliances before distance testing.</li>
-    </ul>
-  </details>
+    <section id="screen-about" class="screen">
+      <div class="card">
+        <h2>About</h2>
+        <p><b>Fault Locator Pro</b> 2.0.0</p>
+        <p>Professional fire alarm and low-voltage diagnostic PWA.</p>
+        <p><b>Developer:</b> David Bannerman</p>
+        <p><b>Contact:</b> <a href="mailto:David@Bannerman.us">David@Bannerman.us</a></p>
+      </div>
 
-  <details class="card help-detail">
-    <summary>Klein ET450 Tracer Workflow</summary>
-    <ol>
-      <li>Use the resistance calculation first to estimate the target distance.</li>
-      <li>De-energize and isolate the circuit before de-energized tracing.</li>
-      <li>Connect the ET450 transmitter to the target pair or conductor and ground depending on the tracing goal.</li>
-      <li>Start with low receiver sensitivity and increase only as needed.</li>
-      <li>Trace toward the calculated distance. Mark boxes and splices close to the estimated distance.</li>
-      <li>A sudden signal drop can suggest a break, splice, branch, or shielded transition.</li>
-      <li>A signal spreading to other cables can suggest coupling, parallel paths, or a grounded shield/drain.</li>
-      <li>Use NCV only as an alert. Confirm all voltage readings with a meter.</li>
-    </ol>
-  </details>
+      <details class="card help-block" open>
+        <summary>Revision history</summary>
+        <p><b>2.0.0</b> Clean modular rebuild with instrument screen, core calculator, wire database, job timeline, cable builder stub, Help, and About.</p>
+        <p><b>1.x</b> Legacy prototype versions used to explore UI, wire lookup, GPS, reports, and troubleshooting guidance.</p>
+      </details>
 
-  <details class="card help-detail">
-    <summary>Distance-to-Fault Theory</summary>
-    <p class="muted">The app uses resistance to estimate distance. For normal copper pair testing, current travels out on one conductor and back on the other, so the loop resistance is approximately twice the single-conductor resistance.</p>
-    <p class="muted">Temperature changes copper resistance. Warm wire reads slightly higher. Cold wire reads slightly lower. Corrosion, wet cable, devices still connected, splices, and parallel paths can reduce accuracy.</p>
-  </details>
+      <details class="card help-block">
+        <summary>Legal disclaimer</summary>
+        <p class="muted">This app provides estimates only. Actual fault location can be affected by wrong wire selection, temperature, corrosion, wet cable, connected devices, parallel paths, multiple faults, and meter accuracy.</p>
+        <p class="muted">Always de-energize circuits before resistance testing and follow applicable codes, manufacturer instructions, and site safety procedures.</p>
+      </details>
 
-  <details class="card help-detail">
-    <summary>Resistor Color Chart</summary>
-    <div class="resistor-chart">
-      <table>
-        <thead><tr><th>Color</th><th>Digit</th><th>Multiplier</th><th>Tolerance</th></tr></thead>
-        <tbody>
-          <tr><td><span class="sw black"></span>Black</td><td>0</td><td>×1</td><td></td></tr>
-          <tr><td><span class="sw brown"></span>Brown</td><td>1</td><td>×10</td><td>±1%</td></tr>
-          <tr><td><span class="sw red"></span>Red</td><td>2</td><td>×100</td><td>±2%</td></tr>
-          <tr><td><span class="sw orange"></span>Orange</td><td>3</td><td>×1k</td><td></td></tr>
-          <tr><td><span class="sw yellow"></span>Yellow</td><td>4</td><td>×10k</td><td></td></tr>
-          <tr><td><span class="sw green"></span>Green</td><td>5</td><td>×100k</td><td>±0.5%</td></tr>
-          <tr><td><span class="sw blue"></span>Blue</td><td>6</td><td>×1M</td><td>±0.25%</td></tr>
-          <tr><td><span class="sw violet"></span>Violet</td><td>7</td><td>×10M</td><td>±0.1%</td></tr>
-          <tr><td><span class="sw gray"></span>Gray</td><td>8</td><td>×100M</td><td>±0.05%</td></tr>
-          <tr><td><span class="sw white"></span>White</td><td>9</td><td>×1G</td><td></td></tr>
-          <tr><td><span class="sw gold"></span>Gold</td><td></td><td>×0.1</td><td>±5%</td></tr>
-          <tr><td><span class="sw silver"></span>Silver</td><td></td><td>×0.01</td><td>±10%</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </details>
+      <details class="card help-block">
+        <summary>Privacy</summary>
+        <p class="muted">Saved jobs are stored locally in this browser unless you manually copy or export them.</p>
+      </details>
+    </section>
+  </main>
 
-  <details class="card help-detail">
-    <summary>Technician Decision Tree</summary>
-    <ol>
-      <li><strong>Voltage present?</strong> Stop. Find source before resistance testing.</li>
-      <li><strong>Devices connected?</strong> Disconnect devices, EOLs, and modules.</li>
-      <li><strong>Ohms near zero?</strong> Suspect dead short near test end or unzeroed leads.</li>
-      <li><strong>Low ohms to ground?</strong> Suspect ground fault: metal contact, wet box, shield/drain, staple, conduit edge.</li>
-      <li><strong>Higher than expected?</strong> Suspect corrosion, water, partial open, bad splice, or wrong cable selection.</li>
-      <li><strong>Fault distance known?</strong> Split the run, inspect boxes near the calculated point, then test from the opposite direction.</li>
-    </ol>
-  </details>
-</section>
-
-<section id="about" class="screen">
-  <div class="card about-card">
-    <h2>About Fault Locator Pro</h2>
-    <p><b>App:</b> Fault Locator Pro</p>
-    <p><b>Version:</b> v23 Rugged Field Instrument Build</p>
-    <p><b>Purpose:</b> Estimate distance to shorts and ground faults using resistance measurements, wire resistance data, and technician-guided troubleshooting logic.</p>
-    <p><b>Developer:</b> David Bannerman</p>
-    <p><b>Contact:</b> <a href="mailto:David@Bannerman.us">David@Bannerman.us</a></p>
-  </div>
-
-  <details class="card help-detail" open>
-    <summary>Revision History</summary>
-    <div class="update-log">
-      <p><b>v23</b> Polished rugged UI, improved wire buttons, click/mute behavior, dark LCD mode, About page, enhanced Help resource, resistor chart.</p>
-      <p><b>v22</b> Added rugged meter styling, expanded fire alarm cable database, and flashing fault annunciator.</p>
-      <p><b>v21</b> Added rugged LCD layout and front-panel fault icon.</p>
-      <p><b>v19-v20</b> Compact single-screen design and improved iPhone layout.</p>
-      <p><b>v1-v18</b> Initial calculator, wire lookup, GPS, job reports, LCD styling, and technician guidance.</p>
-    </div>
-  </details>
-
-  <details class="card help-detail">
-    <summary>Legal Disclaimer</summary>
-    <p class="muted">This app provides an engineering estimate only. Actual fault location can be affected by inaccurate wire selection, temperature, corrosion, splices, devices still connected, parallel paths, ground leakage, wet cable, meter accuracy, and multiple faults.</p>
-    <p class="muted">Always follow electrical safety practices, de-energize circuits before resistance testing, verify with a meter, and comply with applicable codes, manufacturer instructions, and site procedures.</p>
-  </details>
-</section>
-</main>
-
-<nav>
-  <button class="tab active" data-screen="test" type="button">Test</button>
-  <button class="tab" data-screen="job" type="button">Job</button>
-  <button class="tab" data-screen="history" type="button">Jobs</button>
-  <button class="tab" data-screen="help" type="button">Help</button>
-  <button class="tab" data-screen="about" type="button">About</button>
-</nav>
+  <nav>
+    <button class="tab active" data-screen="test" type="button">Test</button>
+    <button class="tab" data-screen="jobs" type="button">Jobs</button>
+    <button class="tab" data-screen="cable" type="button">Cable</button>
+    <button class="tab" data-screen="help" type="button">Help</button>
+    <button class="tab" data-screen="about" type="button">About</button>
+  </nav>
 </div>
+
 <div id="toast" class="toast hidden"></div>
-<script src="app.js"></script>
+<script type="module" src="src/main.js"></script>
 </body>
 </html>

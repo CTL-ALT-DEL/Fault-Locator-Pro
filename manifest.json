@@ -1,24 +1,24 @@
 {
-  "name": "Fault Locator Pro Compact",
+  "name": "Fault Locator Pro 2.0",
   "short_name": "Fault Locator",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#070707",
-  "theme_color": "#070707",
+  "background_color": "#050505",
+  "theme_color": "#050505",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "icons/icon-180.png",
+      "src": "assets/icons/icon-180.png",
       "sizes": "180x180",
       "type": "image/png"
     },
     {
-      "src": "icons/icon-192.png",
+      "src": "assets/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "icons/icon-512.png",
+      "src": "assets/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
