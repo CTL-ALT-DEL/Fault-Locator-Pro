@@ -19,7 +19,7 @@
     <div class="eyebrow">Cable Fault Field Instrument</div>
     <h1>Fault Locator Pro</h1>
   </div>
-  <div class="ver">v20</div>
+  <div class="ver">v21</div>
 </header>
 
 <main>
@@ -30,9 +30,17 @@
         <span id="ohmMini">0.00 Ω</span>
         <span class="battery"><i></i></span>
       </div>
-      <div class="fault-pill"><span id="faultIcon">✓</span><b id="faultLabel">NORMAL</b></div>
-      <div id="distance">-- ft</div>
-      <div id="lcdSegments" class="segments"></div>
+      <div class="lcd-main-row">
+        <div class="meter-fault-icon"><span id="faultIcon">✓</span></div>
+        <div class="lcd-center">
+          <b id="faultLabel" class="fault-label">READY</b>
+          <div id="distance" class="distance idle">SELECT WIRE<br>ENTER OHMS</div>
+        </div>
+      </div>
+      <div class="signal-row">
+        <span>SIGNAL</span>
+        <div id="lcdSegments" class="segments"></div>
+      </div>
     </div>
 
     <div class="compact-grid">
@@ -139,7 +147,7 @@
 <nav>
   <button class="tab active" data-screen="test" type="button">Test</button>
   <button class="tab" data-screen="job" type="button">Job</button>
-  <button class="tab" data-screen="history" type="button">Log</button>
+  <button class="tab" data-screen="history" type="button">Jobs</button>
   <button class="tab" data-screen="help" type="button">Help</button>
   <button class="tab" data-screen="settings" type="button">Set</button>
 </nav>
