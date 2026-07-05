@@ -11,7 +11,7 @@ The app calculates the estimated fault location by using:
 -   Wire gauge (AWG) 
 -   Measured loop resistance (ohms)
 -   Estimated wire temperature
--   Optional total cable length
+-   Optional total cable length 
 
 The application compensates for the change in copper resistance caused
 by temperature and estimates the distance from the test location to the
