@@ -16,7 +16,7 @@ The application compensates for the change in copper resistance caused
 by temperature and estimates the distance from the test location to the
 fault.
 
-------------------------------------------------------------------------
+--------------------------------------------------------------------------
 
 Features
 
@@ -58,7 +58,7 @@ continues to work offline after the necessary files have been cached.
 
 ------------------------------------------------------------------------
 
-Disclaimer
+Disclaimer!
 
 This application provides an engineering estimate based on standard
 resistance values for solid copper conductors. Actual fault locations
