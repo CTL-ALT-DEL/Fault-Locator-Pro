@@ -3,8 +3,8 @@
   "short_name": "Fault Locator",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#05080c",
-  "theme_color": "#070b10",
+  "background_color": "#070707",
+  "theme_color": "#101010",
   "orientation": "portrait",
   "icons": [
     {

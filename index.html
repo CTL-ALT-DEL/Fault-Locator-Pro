@@ -1,1 +1,158 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Fault Locator"><meta name="theme-color" content="#070b10"><title>Fault Locator Pro</title><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icons/icon-180.png"><link rel="stylesheet" href="styles.css"></head><body><div id="app"><header class="topbar"><div><div class="eyebrow">Solid Copper • Two-Conductor Loop Test</div><h1>Fault Locator Pro</h1></div><button id="installHint" class="pill">iPhone PWA</button></header><main><section id="screen-calc" class="screen active"><div class="instrument"><div class="instrument-top"><div><span class="tiny">FAULT LOCATION</span><div id="distance" class="distance">-- ft</div></div><div id="confidence" class="confidence neutral"><span>Confidence</span><strong>--</strong></div></div><div class="cable-visual"><div class="ends"><span>Test End</span><span>Far End</span></div><div class="track"><div id="fill" class="fill"></div><div id="faultPin" class="fault-pin"><span>▲</span></div></div><div id="percentText" class="percent-text">Enter total cable length to show position.</div></div><div class="readout-grid"><div><span>Range</span><strong id="range">--</strong></div><div><span>Remaining</span><strong id="remaining">--</strong></div><div><span>Temp Adj.</span><strong id="tempAdjust">0.0%</strong></div></div></div><div id="warning" class="warning hidden"></div><div class="panel"><div class="grid two"><label class="field"><span>Wire Gauge</span><select id="gauge"><option value="14">14 AWG</option><option value="16">16 AWG</option><option value="18">18 AWG</option><option value="22" selected>22 AWG</option><option value="24">24 AWG</option></select></label><label class="field"><span>Measured Loop Resistance Ω</span><input id="resistance" inputmode="decimal" type="number" step="0.001" placeholder="ex: 3.23"></label></div><div class="grid two"><label class="field temp-field" id="tempField"><span>Estimated Wire Temperature °F</span><input id="temperature" inputmode="decimal" type="number" value="68"></label><label class="field"><span>Total Cable Length ft <em>optional</em></span><input id="length" inputmode="decimal" type="number" placeholder="ex: 250"></label></div><div class="temp-presets"><button data-temp="32">Cold 32°</button><button data-temp="68" class="selected">Normal 68°</button><button data-temp="90">Warm 90°</button><button data-temp="120">Hot 120°</button></div></div><div class="panel"><h2>Job Notes</h2><div class="grid two"><label class="field"><span>Customer / Site</span><input id="customer" placeholder="optional"></label><label class="field"><span>Cable ID / Location</span><input id="cableId" placeholder="optional"></label></div><label class="field"><span>Notes</span><textarea id="notes" rows="3" placeholder="optional job notes"></textarea></label></div><details class="details"><summary>Show Math</summary><pre id="math"></pre></details><div class="actions"><button id="clearBtn" class="secondary">Clear</button><button id="saveJobBtn" class="primary">Save Job</button><button id="copyBtn" class="secondary wide">Copy Report</button></div></section><section id="screen-history" class="screen"><div class="panel"><div class="section-head"><h2>Job History</h2><button id="clearHistoryBtn" class="mini danger">Clear</button></div><div id="historyList" class="history-list empty">No saved jobs yet.</div></div></section><section id="screen-ref" class="screen"><div class="panel"><h2>Solid Copper Reference</h2><p class="muted">Standard DC resistance at 68°F / 20°C. Loop value is two conductors.</p><table><thead><tr><th>Gauge</th><th>Ω / 1000 ft</th><th>Loop Ω / 1000 ft</th></tr></thead><tbody id="refTable"></tbody></table></div><div class="panel"><h2>Temperature</h2><p>Copper resistance increases when the cable is hotter than 68°F and decreases when colder. This app adjusts the resistance-per-foot before estimating distance.</p><p class="muted">Temperature is still an estimate. Use the actual cable environment when possible: attic, conduit, rooftop, freezer, crawlspace, or outside wall.</p></div></section><section id="screen-help" class="screen"><div class="panel"><h2>Prep the Cable</h2><ol class="steps"><li><strong>De-energize.</strong> Turn power off and verify no voltage is present.</li><li><strong>Isolate both conductors.</strong> Disconnect from controls, devices, panels, relays, loads, electronics, and parallel paths.</li><li><strong>Expose clean copper.</strong> Use clean contact points so the meter reading is stable.</li><li><strong>Confirm the short.</strong> The app assumes a short exists between the two conductors.</li></ol></div><div class="panel"><h2>Meter Steps</h2><ol class="steps"><li>Set the digital multimeter to resistance / ohms Ω.</li><li>Short the meter leads together and use REL / Zero if available.</li><li>Place one probe on each conductor at the same end of the cable.</li><li>Wait for the reading to settle.</li><li>Enter the measured loop resistance into the app.</li></ol></div><div class="panel"><h2>Common Problems</h2><ul class="tips"><li>Very low readings may be mostly meter lead resistance.</li><li>Readings beyond the cable length may mean the gauge, length, temperature, or isolation is wrong.</li><li>Wet cable, corrosion, splices, partial shorts, and multiple faults can create misleading results.</li></ul></div></section><section id="screen-settings" class="screen"><div class="panel"><h2>Settings</h2><label class="check"><input id="gloveMode" type="checkbox"> Glove Mode</label><label class="field"><span>Calibration Adjustment %</span><input id="calibration" inputmode="decimal" type="number" step="0.1" value="0"></label><p class="muted">Calibration adjusts the resistance table. Use only after comparing against a known cable length.</p></div><div class="panel"><h2>About</h2><p><strong>Fault Locator Pro</strong> estimates distance to a short in solid copper two-conductor cable using measured loop resistance.</p><p class="muted">Designed for iPhone Safari “Add to Home Screen” use. Works offline after installation.</p><p class="muted">Version 3.0</p></div></section></main><nav class="tabs"><button class="tab active" data-screen="calc">Calc</button><button class="tab" data-screen="history">History</button><button class="tab" data-screen="ref">Reference</button><button class="tab" data-screen="help">Help</button><button class="tab" data-screen="settings">Settings</button></nav></div><div id="toast" class="toast hidden"></div><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Fault Locator">
+<meta name="theme-color" content="#101010">
+<title>Fault Locator Pro</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app">
+<header>
+  <div class="brand">
+    <div class="mark">FL</div>
+    <div>
+      <div class="overline">Copper Loop Tester</div>
+      <h1>Fault Locator</h1>
+    </div>
+  </div>
+  <div class="v">PRO v6</div>
+</header>
+
+<main>
+<section id="calc" class="screen active">
+  <div class="tester">
+    <div class="screenbox">
+      <div class="screenlabel">DISTANCE TO SHORT</div>
+      <div id="distance" class="big">-- ft</div>
+      <div id="status" class="status">Enter wire gauge and meter reading</div>
+    </div>
+
+    <div class="inputs">
+      <label>Wire Gauge
+        <select id="gauge">
+          <option value="14">14 AWG</option>
+          <option value="16">16 AWG</option>
+          <option value="18">18 AWG</option>
+          <option value="22" selected>22 AWG</option>
+          <option value="24">24 AWG</option>
+        </select>
+      </label>
+      <label>Meter Reading Ω
+        <input id="ohms" type="number" inputmode="decimal" step="0.001" placeholder="3.23">
+      </label>
+    </div>
+
+    <details class="advanced">
+      <summary>Options</summary>
+      <div class="inputs smallgrid">
+        <label>Wire Temp °F
+          <input id="temp" type="number" inputmode="decimal" value="68">
+        </label>
+        <label>Cable Length ft
+          <input id="length" type="number" inputmode="decimal" placeholder="optional">
+        </label>
+      </div>
+      <div class="chips">
+        <button data-temp="32">32°</button>
+        <button data-temp="68" class="picked">68°</button>
+        <button data-temp="90">90°</button>
+        <button data-temp="120">120°</button>
+      </div>
+    </details>
+  </div>
+
+  <div id="warn" class="warn hidden"></div>
+
+  <details class="card">
+    <summary>Fault details</summary>
+    <div class="bar"><div id="fill"></div></div>
+    <div id="barText" class="muted">Enter cable length for position bar.</div>
+    <div class="metrics">
+      <div><span>Range</span><b id="range">--</b></div>
+      <div><span>Remaining</span><b id="remaining">--</b></div>
+      <div><span>Temp Adj.</span><b id="tempAdj">0.0%</b></div>
+    </div>
+  </details>
+
+  <div class="actions">
+    <button id="clear">Clear</button>
+    <button id="save">Save</button>
+  </div>
+</section>
+
+<section id="job" class="screen">
+  <div class="card">
+    <h2>Job Report</h2>
+    <label>Customer / Site<input id="customer" placeholder="optional"></label>
+    <label>Cable ID / Location<input id="cableId" placeholder="optional"></label>
+    <label>Notes<textarea id="notes" rows="4" placeholder="optional"></textarea></label>
+    <button id="gps">Use GPS Location</button>
+    <p id="gpsStatus" class="muted">GPS not saved.</p>
+    <button id="copy">Copy Report</button>
+  </div>
+</section>
+
+<section id="history" class="screen">
+  <div class="card">
+    <div class="topline"><h2>History</h2><button id="clearHistory" class="mini">Clear</button></div>
+    <div id="historyList" class="empty">No saved jobs yet.</div>
+  </div>
+</section>
+
+<section id="ref" class="screen">
+  <div class="card">
+    <h2>Wire Reference</h2>
+    <table><thead><tr><th>Gauge</th><th>Ω/1000 ft</th><th>Loop</th></tr></thead><tbody id="refRows"></tbody></table>
+  </div>
+  <details class="card">
+    <summary>Show math</summary>
+    <pre id="math"></pre>
+  </details>
+</section>
+
+<section id="help" class="screen">
+  <div class="card">
+    <h2>Test Procedure</h2>
+    <ol>
+      <li>Turn power off and verify no voltage is present.</li>
+      <li>Disconnect both conductors from all equipment.</li>
+      <li>Set meter to ohms.</li>
+      <li>Short meter leads and use REL/Zero if available.</li>
+      <li>Measure across the two wires at one end.</li>
+      <li>Enter the loop resistance reading.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="settings" class="screen">
+  <div class="card">
+    <h2>Settings</h2>
+    <label class="check"><input id="glove" type="checkbox"> Large control mode</label>
+    <label>Calibration %
+      <input id="cal" type="number" inputmode="decimal" step="0.1" value="0">
+    </label>
+    <p class="muted">Calibration adjusts the copper resistance table after testing against a known length.</p>
+  </div>
+</section>
+</main>
+
+<nav>
+  <button class="nav active" data-screen="calc">Test</button>
+  <button class="nav" data-screen="job">Job</button>
+  <button class="nav" data-screen="history">Log</button>
+  <button class="nav" data-screen="ref">Ref</button>
+  <button class="nav" data-screen="help">Help</button>
+  <button class="nav" data-screen="settings">Set</button>
+</nav>
+</div>
+<div id="toast" class="toast hidden"></div>
+<script src="app.js"></script>
+</body>
+</html>
