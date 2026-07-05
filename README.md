@@ -58,7 +58,6 @@ Once installed, the app functions like a native iPhone application and
 continues to work offline after the necessary files have been cached.
 
 ------------------------------------------------------------------------
-
 Disclaimer!
 
 This application provides an engineering estimate based on standard
