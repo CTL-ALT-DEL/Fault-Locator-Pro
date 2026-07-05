@@ -13,13 +13,20 @@
   <link rel="stylesheet" href="src/ui/styles.css">
 </head>
 <body>
+<div id="splash" class="splash">
+  <div class="splash-panel">
+    <div class="splash-title">FAULT LOCATOR PRO</div>
+    <div class="splash-sub">Diagnostic system 2.0.1</div>
+    <div class="splash-line">Loading wire database...</div>
+  </div>
+</div>
 <div id="app">
   <header class="topbar">
     <div>
       <h1>Fault Locator Pro</h1>
       <div class="sub">Professional Diagnostic System</div>
     </div>
-    <div class="version">2.0.0</div>
+    <div class="version">2.0.1</div>
   </header>
 
   <main>
@@ -73,6 +80,8 @@
         </div>
 
         <div id="wire-panel" class="wire-panel hidden">
+          <div class="wire-section-title">Favorites</div>
+          <div id="wire-favorites" class="wire-favorites"></div>
           <input id="wire-search" type="search" placeholder="Search wire">
           <div class="filter-row">
             <button data-wire-filter="" type="button">All</button>
@@ -167,7 +176,7 @@
     <section id="screen-about" class="screen">
       <div class="card">
         <h2>About</h2>
-        <p><b>Fault Locator Pro</b> 2.0.0</p>
+        <p><b>Fault Locator Pro</b> 2.0.1</p>
         <p>Professional fire alarm and low-voltage diagnostic PWA.</p>
         <p><b>Developer:</b> David Bannerman</p>
         <p><b>Contact:</b> <a href="mailto:David@Bannerman.us">David@Bannerman.us</a></p>
@@ -175,7 +184,7 @@
 
       <details class="card help-block" open>
         <summary>Revision history</summary>
-        <p><b>2.0.0</b> Clean modular rebuild with instrument screen, core calculator, wire database, job timeline, cable builder stub, Help, and About.</p>
+        <p><b>2.0.1</b> UI polish release: startup splash, improved LCD display, refined spacing, 3D controls, wire favorites, and clearer technician layout.</p><p><b>2.0.0</b> Clean modular rebuild with instrument screen, core calculator, wire database, job timeline, cable builder stub, Help, and About.</p>
         <p><b>1.x</b> Legacy prototype versions used to explore UI, wire lookup, GPS, reports, and troubleshooting guidance.</p>
       </details>
 

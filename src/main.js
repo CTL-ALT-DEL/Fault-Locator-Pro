@@ -23,6 +23,28 @@ function updateWireUI() {
   $("wire-name").textContent = selectedWire.name;
 }
 
+function selectWireById(id) {
+  selectedWire = findWire(id) || selectedWire;
+  updateWireUI();
+  $("wire-search").value = "";
+  $("wire-panel").classList.add("hidden");
+  updateCalculation();
+  toast("Wire selected");
+}
+
+function renderWireFavorites() {
+  const favorites = ["fpl18-2", "fpl18-4", "shield18", "protect-phsc"];
+  const container = $("wire-favorites");
+  if (!container) return;
+  container.innerHTML = favorites.map(id => {
+    const wire = findWire(id);
+    return wire ? `<button type="button" data-favorite-wire="${wire.id}">${wire.name.replace(" fire alarm", "")}</button>` : "";
+  }).join("");
+  $$("[data-favorite-wire]", container).forEach(button => {
+    button.addEventListener("click", () => selectWireById(button.dataset.favoriteWire));
+  });
+}
+
 function renderWireResults(query = "") {
   const rows = searchWires(query);
   const container = $("wire-results");
@@ -35,14 +57,7 @@ function renderWireResults(query = "") {
   `).join("") || `<div class="muted">No matching wire.</div>`;
 
   $$("[data-wire-id]", container).forEach(button => {
-    button.addEventListener("click", () => {
-      selectedWire = findWire(button.dataset.wireId) || selectedWire;
-      updateWireUI();
-      $("wire-search").value = "";
-      $("wire-panel").classList.add("hidden");
-      updateCalculation();
-      toast("Wire selected");
-    });
+    button.addEventListener("click", () => selectWireById(button.dataset.wireId));
   });
 }
 
@@ -125,6 +140,7 @@ function renderResistorTable() {
 
 function boot() {
   updateWireUI();
+  renderWireFavorites();
   renderWireResults("");
   renderResistorTable();
   renderCableMap($("cable-map"));
@@ -199,4 +215,14 @@ function boot() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", boot);
+
+function hideSplash() {
+  const splash = document.getElementById("splash");
+  if (splash) setTimeout(() => splash.classList.add("hide"), 650);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  boot();
+  hideSplash();
+});
+

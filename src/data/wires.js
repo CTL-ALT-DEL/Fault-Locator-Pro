@@ -13,6 +13,11 @@ export const WIRE_DB = [
   { id: "fpl14-4", name: "14/4 FPL fire alarm", category: "Fire", gauge: "14", ohms1000: 2.6, tags: "fire fpl fplr fplp 14/4 speaker strobe" },
   { id: "shield18", name: "18/2 shielded SLC", category: "Fire", gauge: "18", ohms1000: 6.5, tags: "fire shielded slc addressable drain 18/2" },
   { id: "shield22", name: "22/2 shielded data/SLC", category: "Fire", gauge: "22", ohms1000: 16.14, tags: "fire shielded data slc addressable drain 22/2" },
+  { id: "fplp18-2", name: "18/2 FPLP plenum fire alarm", category: "Fire", gauge: "18", ohms1000: 6.5, tags: "fire fplp plenum 18/2 slc nac" },
+  { id: "fplp18-4", name: "18/4 FPLP plenum fire alarm", category: "Fire", gauge: "18", ohms1000: 6.5, tags: "fire fplp plenum 18/4 speaker strobe" },
+  { id: "fplp16-2", name: "16/2 FPLP plenum fire alarm", category: "Fire", gauge: "16", ohms1000: 4.1, tags: "fire fplp plenum 16/2 nac" },
+  { id: "fplp16-4", name: "16/4 FPLP plenum fire alarm", category: "Fire", gauge: "16", ohms1000: 4.1, tags: "fire fplp plenum 16/4 speaker strobe" },
+  { id: "nac12-2", name: "12/2 fire alarm NAC", category: "Fire", gauge: "custom", ohms1000: 1.8, tags: "fire nac 12/2 high current" },
 
   { id: "protect-phsc", name: "Protectowire PHSC", category: "Protectowire", gauge: "custom", ohmsPerFt: 0.185, tempCompensated: false, tags: "protectowire phsc linear heat detector" },
   { id: "protect-plr", name: "Protectowire PLR", category: "Protectowire", gauge: "custom", ohmsPerFt: 0.058, tempCompensated: false, tags: "protectowire plr low resistance linear heat detector" },

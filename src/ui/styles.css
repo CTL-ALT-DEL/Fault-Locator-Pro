@@ -46,3 +46,175 @@ button:active{transform:translateY(2px)}.primary{background:linear-gradient(180d
 nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(8px + env(safe-area-inset-bottom));width:min(430px,calc(100% - 16px));display:grid;grid-template-columns:repeat(5,1fr);gap:4px;background:linear-gradient(180deg,#1b1b1b,#070707);border:1px solid #3c3c3c;border-radius:22px;padding:5px;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 7px 0 #000,0 16px 24px rgba(0,0,0,.5)}
 .tab{background:transparent;color:var(--muted);font-size:11px;min-height:40px;border-radius:12px;box-shadow:none}.tab.active{background:linear-gradient(180deg,#ffdf62,#f6b51d 55%,#be7e08);color:#111}
 @media(max-height:740px){#app{padding-top:6px}.lcd{padding:6px 10px 8px}.distance{font-size:38px}.distance.idle{font-size:20px}.controls{gap:5px;padding:6px}input,select,button{min-height:36px}.diagnostic-card{font-size:12px;margin-top:9px}}
+
+
+/* 2.0.1 polish release */
+.splash{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(circle at 50% 18%,rgba(245,181,27,.20),transparent 30%),
+    #050505;
+}
+.splash.hide{display:none}
+.splash-panel{
+  width:min(330px,calc(100% - 40px));
+  border:2px solid var(--yellow);
+  border-radius:22px;
+  padding:26px 20px;
+  text-align:center;
+  background:linear-gradient(180deg,#191919,#070707);
+  box-shadow:0 0 40px rgba(245,181,27,.18), inset 0 1px 0 rgba(255,255,255,.12);
+}
+.splash-title{
+  color:var(--yellow2);
+  font-size:24px;
+  font-weight:950;
+  font-style:italic;
+  letter-spacing:.02em;
+}
+.splash-sub{
+  color:#ddd;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.13em;
+  margin-top:6px;
+}
+.splash-line{
+  color:var(--muted);
+  margin-top:20px;
+  font-size:13px;
+}
+
+#app{
+  max-width:430px;
+}
+
+.lcd{
+  position:relative;
+  overflow:hidden;
+}
+.lcd:after{
+  content:"";
+  position:absolute;
+  inset:8px;
+  pointer-events:none;
+  border-radius:10px;
+  background:linear-gradient(135deg,rgba(255,255,255,.18),transparent 42%);
+}
+.distance{
+  font-family:"Courier New",ui-monospace,SFMono-Regular,Menlo,monospace;
+  text-shadow:
+    1px 1px 0 rgba(255,255,255,.18),
+    -1px -1px 0 rgba(0,0,0,.12);
+}
+.distance:not(.idle){
+  font-size:44px;
+  letter-spacing:-.03em;
+}
+.fault-icon{
+  background:rgba(0,0,0,.06);
+  border-radius:8px;
+  height:54px;
+  display:grid;
+  place-items:center;
+}
+.distance-bar{
+  grid-template-columns:repeat(18,1fr);
+  padding-left:4px;
+}
+.distance-bar span{
+  height:16px;
+  border-radius:3px;
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.12);
+}
+.controls{
+  grid-template-columns:1.25fr 1fr 1fr;
+  padding:8px;
+  gap:7px;
+}
+input,select,button{
+  transition:transform .06s ease, box-shadow .06s ease, border-color .12s ease;
+}
+input:focus,select:focus{
+  border-color:var(--yellow);
+  box-shadow:
+    inset 0 2px 8px rgba(0,0,0,.75),
+    0 0 0 2px rgba(245,181,27,.20),
+    0 3px 0 #000;
+}
+.wire-button b{
+  text-transform:none;
+}
+.wire-section-title{
+  color:var(--yellow);
+  text-transform:uppercase;
+  font-size:10px;
+  font-weight:950;
+  letter-spacing:.12em;
+  text-align:center;
+  margin:0 0 6px;
+}
+.wire-favorites{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5px;
+  margin-bottom:7px;
+}
+.wire-favorites button{
+  min-height:34px;
+  font-size:10px;
+  padding:4px;
+  color:#111;
+  background:linear-gradient(180deg,#ffdf62,#f6b51d 55%,#be7e08);
+}
+.wire-card{
+  grid-template-columns:1fr 58px;
+}
+.wire-card .name{
+  line-height:1.15;
+}
+.filter-row button.active{
+  color:var(--yellow2);
+}
+.diagnostic-card{
+  margin-top:14px;
+}
+.card-title:before{
+  content:"";
+  display:inline-block;
+  width:8px;
+  height:8px;
+  background:var(--yellow);
+  border-radius:50%;
+  margin-right:6px;
+  box-shadow:0 0 8px rgba(245,181,27,.7);
+}
+.mini-meters b{
+  font-variant-numeric:tabular-nums;
+}
+.job-item{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+}
+.help-block[open]{
+  border-color:#4b3b17;
+}
+nav{
+  backdrop-filter:blur(16px);
+}
+.tab{
+  text-transform:uppercase;
+  letter-spacing:.03em;
+}
+@media(max-height:740px){
+  .topbar{padding:8px 10px}
+  h1{font-size:18px}
+  .lcd{padding:6px 10px}
+  .readout{min-height:76px}
+  .distance:not(.idle){font-size:39px}
+  .distance.idle{font-size:19px}
+  .diagnostic-card{margin-top:8px}
+}
