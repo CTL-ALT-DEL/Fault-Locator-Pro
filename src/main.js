@@ -19,8 +19,12 @@ function readNumber(id) {
   return Number.isFinite(value) ? value : NaN;
 }
 
+function formatWireName(name) {
+  return String(name).replace(/^(\d{2}(?:\/\d)?(?:\s+AWG)?)(\s+)/i, "$1<br>");
+}
+
 function updateWireUI() {
-  $("wire-name").textContent = selectedWire.name;
+  $("wire-name").innerHTML = formatWireName(selectedWire.name);
 }
 
 function selectWireById(id) {
@@ -38,7 +42,7 @@ function renderWireFavorites() {
   if (!container) return;
   container.innerHTML = favorites.map(id => {
     const wire = findWire(id);
-    return wire ? `<button type="button" data-favorite-wire="${wire.id}">${wire.name.replace(" fire alarm", "")}</button>` : "";
+    return wire ? `<button type="button" data-favorite-wire="${wire.id}">${wire.name.replace(" fire alarm", "").replace(/^(\\d{2}(?:\\/\\d)?(?:\\s+AWG)?)(\\s+)/i, "$1<br>")}</button>` : "";
   }).join("");
   $$("[data-favorite-wire]", container).forEach(button => {
     button.addEventListener("click", () => selectWireById(button.dataset.favoriteWire));
@@ -50,7 +54,7 @@ function renderWireResults(query = "") {
   const container = $("wire-results");
   container.innerHTML = rows.map(wire => `
     <div class="wire-card">
-      <div class="name">${wire.name}</div>
+      <div class="name">${formatWireName(wire.name)}</div>
       <div class="meta">${wire.category} • ${wire.ohmsPerFt ? wire.ohmsPerFt + " Ω/ft" : wire.ohms1000 + " Ω/1000 ft"}</div>
       <button type="button" data-wire-id="${wire.id}">Use</button>
     </div>
@@ -218,7 +222,7 @@ function boot() {
 
 function hideSplash() {
   const splash = document.getElementById("splash");
-  if (splash) setTimeout(() => splash.classList.add("hide"), 650);
+  if (splash) setTimeout(() => splash.classList.add("hide"), 2500);
 }
 
 document.addEventListener("DOMContentLoaded", () => {

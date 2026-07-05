@@ -17,7 +17,7 @@ export function setActiveScreen(name) {
 
 export function renderDistanceBar(container, ratio) {
   if (!container.children.length) {
-    for (let i = 0; i < 19; i += 1) {
+    for (let i = 0; i < 18; i += 1) {
       container.appendChild(document.createElement("span"));
     }
   }

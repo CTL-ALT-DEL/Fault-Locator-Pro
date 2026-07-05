@@ -218,3 +218,23 @@ nav{
   .distance.idle{font-size:19px}
   .diagnostic-card{margin-top:8px}
 }
+
+/* 2.0.2 LCD distance bar and wire label fixes */
+.distance-bar{
+  grid-template-columns:repeat(18,1fr) !important;
+  grid-auto-flow:column !important;
+  grid-auto-rows:0 !important;
+  overflow:hidden !important;
+  min-width:0 !important;
+}
+.distance-bar span{
+  min-width:0 !important;
+}
+.wire-button b,
+.wire-card .name,
+.wire-favorites button{
+  line-height:1.05 !important;
+}
+.wire-favorites button{
+  white-space:normal !important;
+}
