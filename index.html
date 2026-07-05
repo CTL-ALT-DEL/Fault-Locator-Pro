@@ -18,11 +18,11 @@
   <div class="brand">
     <div class="logo">FL</div>
     <div>
-      <div class="eyebrow">Solid Copper Loop Fault Tool</div>
+      <div class="eyebrow">Cable Fault Field Instrument</div>
       <h1>Fault Locator Pro</h1>
     </div>
   </div>
-  <div class="ver">v9</div>
+  <div class="ver">v10</div>
 </header>
 
 <main>
@@ -91,6 +91,7 @@
 <section id="job" class="screen">
   <div class="card">
     <h2>Job Report</h2>
+    <div class="job-number">Job # <span id="jobNumber">0001</span></div>
     <label>Customer / Site<input id="customer" placeholder="optional"></label>
     <label>Cable ID / Location<input id="cableId" placeholder="optional"></label>
     <label>Notes<textarea id="notes" rows="4" placeholder="optional"></textarea></label>
@@ -112,8 +113,44 @@
 
 <section id="ref" class="screen">
   <div class="card">
+    <h2>Smart Cable Selector</h2>
+    <p class="muted">Answer a few quick questions to narrow down likely cable types.</p>
+    <div class="selector-grid">
+      <label>System Type
+        <select id="smartSystem">
+          <option value="">Any</option>
+          <option value="fire">Fire Alarm</option>
+          <option value="protectowire">Protectowire</option>
+          <option value="security">Security / Controls</option>
+          <option value="network">Network / Data</option>
+          <option value="thermostat">Thermostat / HVAC</option>
+          <option value="standard">Standard Copper</option>
+        </select>
+      </label>
+      <label>Approx. Gauge
+        <select id="smartGauge">
+          <option value="">Any</option>
+          <option value="12">12 AWG</option>
+          <option value="14">14 AWG</option>
+          <option value="16">16 AWG</option>
+          <option value="18">18 AWG</option>
+          <option value="22">22 AWG</option>
+          <option value="24">24 AWG</option>
+        </select>
+      </label>
+    </div>
+    <button id="smartSearchBtn" type="button" class="primary">Find Matching Wires</button>
+  </div>
+
+  <div class="card">
     <h2>Wire Lookup</h2>
-    <input id="wireSearch" placeholder="Search: 18/2 FPLR, Protectowire, 16 AWG">
+    <input id="wireSearch" placeholder="Search: 18/2 FPLR, Protectowire, CAT5, 16 AWG">
+    <div class="quick-wire-buttons">
+      <button type="button" data-wirequick="18/2 FPLR">18/2 FPLR</button>
+      <button type="button" data-wirequick="16/2 FPLR">16/2 FPLR</button>
+      <button type="button" data-wirequick="Protectowire">Protectowire</button>
+      <button type="button" data-wirequick="CAT5">CAT5</button>
+    </div>
     <div id="wireResults" class="wire-results"></div>
   </div>
 

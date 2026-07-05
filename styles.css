@@ -49,3 +49,16 @@ body.large input,body.large select,body.large button{min-height:66px;font-size:2
 .wire-name{font-weight:900;color:white}
 .wire-meta{font-size:12px;color:var(--muted);line-height:1.35;margin-top:4px}
 .wire-pill{display:inline-block;border:1px solid #444;border-radius:999px;padding:3px 8px;margin:6px 5px 0 0;color:var(--yellow);font-size:11px}
+
+/* v10 professional edition */
+.selected-wire{margin-top:10px;background:#0c0c0c;border:1px solid #3a3a3a;border-radius:15px;padding:10px 12px}
+.selected-wire span{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.12em}
+.selected-wire strong{display:block;color:var(--yellow);font-size:15px;margin-top:3px}
+.selector-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.quick-wire-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.quick-wire-buttons button{background:#252525;color:#fff}
+.job-number{background:#0b0b0b;border:1px solid #333;border-radius:14px;padding:10px 12px;margin-bottom:12px;color:var(--yellow);font-weight:900}
+.wire-card.recommended{border-color:var(--yellow);box-shadow:0 0 0 2px rgba(243,185,77,.12)}
+.wire-card .use-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.wire-card .use-row button{margin-top:0}
+@media(max-width:440px){.selector-grid{grid-template-columns:1fr}.quick-wire-buttons{grid-template-columns:1fr 1fr}}

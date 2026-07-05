@@ -13,7 +13,14 @@
     {id:"fplr12", name:"12 AWG Fire Alarm Cable / FPLR-FPLP", category:"Fire Alarm", ohms1000:1.8, gauge:"custom", tags:"12/2 12 awg fplr fplp fire alarm nac"},
     {id:"protectowire_phsc", name:"Protectowire PHSC Digital Linear Heat Detector", category:"Protectowire", ohmsPerFt:0.185, gauge:"custom", tags:"protectowire phsc linear heat detector steel"},
     {id:"protectowire_plr", name:"Protectowire PLR Low Resistance Linear Heat Detector", category:"Protectowire", ohmsPerFt:0.058, gauge:"custom", tags:"protectowire plr low resistance linear heat detector"},
-    {id:"protectowire_cti", name:"Protectowire CTI Linear Heat Detector", category:"Protectowire", ohmsPerFt:0.282, gauge:"custom", tags:"protectowire cti linear heat detector"}
+    {id:"protectowire_cti", name:"Protectowire CTI Linear Heat Detector", category:"Protectowire", ohmsPerFt:0.282, gauge:"custom", tags:"protectowire cti linear heat detector"},
+
+    {id:"cat3_24", name:"CAT3 / Telephone 24 AWG Pair", category:"Telephone / Data", ohms1000:25.67, gauge:"24", tags:"cat3 telephone station wire 24 awg voice data"},
+    {id:"cat5_24", name:"CAT5 / CAT5e 24 AWG Pair", category:"Network / Data", ohms1000:25.67, gauge:"24", tags:"cat5 cat5e network data ethernet 24 awg"},
+    {id:"cat6_23", name:"CAT6 23 AWG Pair", category:"Network / Data", ohms1000:20.36, gauge:"custom", tags:"cat6 network data ethernet 23 awg"},
+    {id:"security_22", name:"22 AWG Security / Control Cable", category:"Security / Controls", ohms1000:16.14, gauge:"22", tags:"22/2 22/4 security control alarm station"},
+    {id:"security_18", name:"18 AWG Security / Control Cable", category:"Security / Controls", ohms1000:6.385, gauge:"18", tags:"18/2 18/4 security control alarm power"},
+    {id:"thermostat_18", name:"18 AWG Thermostat / HVAC Cable", category:"Thermostat / HVAC", ohms1000:6.385, gauge:"18", tags:"thermostat hvac 18/2 18/5 18/8 control"}
   ];
   let customWire = null;
   const ALPHA = 0.00393;
@@ -28,7 +35,26 @@
   const fmt = (value, digits = 1) => Number.isFinite(value) ? value.toFixed(digits) : "--";
   const id = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now() + "-" + Math.random());
 
+
+  function getSelectedWireName() {
+    return customWire ? customWire.name : $("gauge").value + " AWG Solid Copper";
+  }
+
+  function updateSelectedWireDisplay() {
+    if ($("selectedWireName")) $("selectedWireName").textContent = getSelectedWireName();
+  }
+
+  function nextJobNumber() {
+    const count = getJobs().length + 1;
+    return String(count).padStart(4, "0");
+  }
+
+  function updateJobNumber() {
+    if ($("jobNumber")) $("jobNumber").textContent = nextJobNumber();
+  }
+
   function calculate() {
+    updateSelectedWireDisplay();
     const gauge = $("gauge").value;
     const ohms = read("ohms");
     const tempF = read("temp");
@@ -113,7 +139,7 @@ Distance = ${ohms} ÷ ${fmt(loopPerFt, 6)} = ${fmt(distance, 2)} ft`;
   function capture() {
     const calc = calculate();
     if (!calc) return null;
-    return {...calc, id:id(), date:new Date().toLocaleString(), customer:$("customer").value.trim(), cableId:$("cableId").value.trim(), notes:$("notes").value.trim(), gps:gpsData};
+    return {...calc, id:id(), date:new Date().toLocaleString(), jobNumber: $("jobNumber") ? $("jobNumber").textContent : "", customer:$("customer").value.trim(), cableId:$("cableId").value.trim(), notes:$("notes").value.trim(), gps:gpsData};
   }
 
   function report(job) {
@@ -122,6 +148,7 @@ Distance = ${ohms} ÷ ${fmt(loopPerFt, 6)} = ${fmt(distance, 2)} ft`;
     const gps = item.gps ? `${item.gps.lat.toFixed(6)}, ${item.gps.lon.toFixed(6)} ± ${Math.round(item.gps.accuracy)}m` : "Not saved";
     return `Fault Locator Report
 Date: ${item.date}
+Job Number: ${item.jobNumber || "Not assigned"}
 Customer/Site: ${item.customer || "Not entered"}
 Cable ID/Location: ${item.cableId || "Not entered"}
 Wire: ${item.wireName || item.gauge + " AWG solid copper"}
@@ -147,6 +174,7 @@ Notes: ${item.notes || "None"}`;
     const jobs = getJobs();
     jobs.unshift(job);
     setJobs(jobs.slice(0, 50));
+    updateJobNumber();
     toast("Job saved.");
   }
 
@@ -273,7 +301,8 @@ Notes: ${item.notes || "None"}`;
     $("wireResults").innerHTML = results.map(w => {
       const ohms1000 = w.ohms1000 || (w.ohmsPerFt * 1000);
       const note = w.ohmsPerFt ? `${w.ohmsPerFt} Ω/ft (${ohms1000.toFixed(1)} Ω/1000 ft)` : `${ohms1000} Ω/1000 ft`;
-      return `<div class="wire-card">
+      const recommended = query && (w.tags.toLowerCase().includes(query) || w.name.toLowerCase().includes(query));
+      return `<div class="wire-card ${recommended ? "recommended" : ""}">
         <div class="wire-name">${escapeHtml(w.name)}</div>
         <div class="wire-meta">${escapeHtml(note)}</div>
         <span class="wire-pill">${escapeHtml(w.category)}</span>
@@ -301,6 +330,7 @@ Notes: ${item.notes || "None"}`;
         temperatureCompensated: false
       };
     }
+    updateSelectedWireDisplay();
     calculate();
     toast("Wire selected.");
     screen("test");
@@ -318,21 +348,42 @@ Notes: ${item.notes || "None"}`;
       isLoopValue: false,
       temperatureCompensated: false
     };
+    updateSelectedWireDisplay();
     calculate();
     toast("Custom wire selected.");
     screen("test");
+  }
+
+
+  function runSmartSelector() {
+    const system = $("smartSystem").value;
+    const gauge = $("smartGauge").value;
+    let q = "";
+    if (system === "fire") q += "fire alarm fplr ";
+    if (system === "protectowire") q += "protectowire ";
+    if (system === "security") q += "security control ";
+    if (system === "network") q += "cat network data ";
+    if (system === "thermostat") q += "thermostat hvac ";
+    if (system === "standard") q += "solid copper ";
+    if (gauge) q += gauge + " awg ";
+    $("wireSearch").value = q.trim();
+    renderWireLookup();
+    toast("Matches updated.");
   }
 
   function init() {
     $("refRows").innerHTML = Object.entries(AWG).map(([g, r]) => `<tr><td>${g} AWG</td><td>${r.toFixed(3)}</td><td>${(r * 2).toFixed(3)}</td></tr>`).join("");
     renderWireLookup();
     updateFaultIcon();
+    updateSelectedWireDisplay();
+    updateJobNumber();
     loadSettings();
     calculate();
     updateGps();
 
     document.querySelectorAll("input,select,textarea").forEach(el => el.addEventListener("input", () => {
       if (el.id === "gauge") customWire = null;
+      updateSelectedWireDisplay();
       calculate();
       if (el.id === "calibration") saveSettings();
     }));
@@ -350,6 +401,13 @@ Notes: ${item.notes || "None"}`;
     $("jobSaveBtn").addEventListener("click", saveJob);
     $("wireSearch").addEventListener("input", renderWireLookup);
     $("applyCustomWire").addEventListener("click", applyCustomWire);
+    $("smartSearchBtn").addEventListener("click", runSmartSelector);
+    document.querySelectorAll("[data-wirequick]").forEach(button => {
+      button.addEventListener("click", () => {
+        $("wireSearch").value = button.dataset.wirequick;
+        renderWireLookup();
+      });
+    });
     $("faultType").addEventListener("change", () => { updateFaultIcon(); calculate(); });
     $("copyBtn").addEventListener("click", () => { copyText(report()); toast("Report copied."); });
     $("gpsBtn").addEventListener("click", getGps);
