@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Fault Locator" />
+  <meta name="theme-color" content="#0b0f14" />
+  <title>Fault Locator Pro</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-180.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">Solid Copper • Loop Test</div>
+        <h1>Fault Locator Pro</h1>
+      </div>
+      <div class="badge">v2.0</div>
+    </header>
+
+    <main>
+      <section id="screen-calc" class="screen active">
+        <div class="panel">
+          <div class="grid two">
+            <label class="field">
+              <span>Wire Gauge</span>
+              <select id="gauge">
+                <option value="14">14 AWG</option>
+                <option value="16">16 AWG</option>
+                <option value="18">18 AWG</option>
+                <option value="22" selected>22 AWG</option>
+                <option value="24">24 AWG</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Measured Loop Ω</span>
+              <input id="resistance" inputmode="decimal" type="number" step="0.001" placeholder="ex: 3.23" />
+            </label>
+          </div>
+
+          <div class="grid two">
+            <label class="field">
+              <span>Wire Temp °F</span>
+              <input id="temperature" inputmode="decimal" type="number" value="68" />
+            </label>
+            <label class="field">
+              <span>Cable Length ft <em>optional</em></span>
+              <input id="length" inputmode="decimal" type="number" placeholder="ex: 250" />
+            </label>
+          </div>
+
+          <div class="temp-presets">
+            <button data-temp="32">Cold</button>
+            <button data-temp="68" class="selected">68°F</button>
+            <button data-temp="90">Warm</button>
+            <button data-temp="120">Hot Attic</button>
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="result-label">Estimated Fault Location</div>
+          <div id="distance" class="distance">-- ft</div>
+          <div id="quality" class="quality">Enter resistance reading</div>
+
+          <div class="fault-line">
+            <div class="line-labels"><span>Test End</span><span>Far End</span></div>
+            <div class="track"><div id="fill" class="fill"></div><div id="pin" class="pin"></div></div>
+            <div id="percentText" class="percent-text">Cable percentage appears when length is entered.</div>
+          </div>
+
+          <div class="stats">
+            <div><span>Remaining</span><strong id="remaining">--</strong></div>
+            <div><span>Temp Adjust</span><strong id="tempAdjust">0.0%</strong></div>
+            <div><span>Range</span><strong id="range">--</strong></div>
+          </div>
+
+          <div id="warning" class="warning hidden"></div>
+        </div>
+
+        <details class="details">
+          <summary>Show Math</summary>
+          <pre id="math"></pre>
+        </details>
+
+        <div class="actions">
+          <button id="clearBtn" class="secondary">Clear</button>
+          <button id="copyBtn" class="primary">Copy Result</button>
+        </div>
+      </section>
+
+      <section id="screen-ref" class="screen">
+        <div class="panel">
+          <h2>Solid Copper Reference</h2>
+          <p class="muted">Standard resistance values at 68°F / 20°C. Loop value is two conductors.</p>
+          <table>
+            <thead><tr><th>Gauge</th><th>Ω / 1000 ft</th><th>Loop Ω / 1000 ft</th></tr></thead>
+            <tbody id="refTable"></tbody>
+          </table>
+        </div>
+        <div class="panel">
+          <h2>Temperature Correction</h2>
+          <p>Copper resistance rises as wire temperature rises and falls when wire temperature is colder than 68°F. The app adjusts the resistance-per-foot before calculating distance.</p>
+        </div>
+      </section>
+
+      <section id="screen-help" class="screen">
+        <div class="panel">
+          <h2>How to Measure</h2>
+          <ol class="steps">
+            <li><strong>De-energize the circuit.</strong> Verify no voltage is present before using resistance mode.</li>
+            <li><strong>Isolate the cable.</strong> Disconnect both conductors from equipment, loads, controls, relays, panels, or electronics.</li>
+            <li><strong>Confirm the short.</strong> Check that the two conductors show low resistance to each other.</li>
+            <li><strong>Zero your leads.</strong> Short the meter leads together and use REL/Zero if your meter has it.</li>
+            <li><strong>Measure across the pair.</strong> Put one probe on each conductor at the same end of the cable.</li>
+            <li><strong>Enter the reading.</strong> Use the measured loop resistance in ohms.</li>
+          </ol>
+        </div>
+        <div class="panel">
+          <h2>Accuracy Tips</h2>
+          <ul class="tips">
+            <li>Clean copper contact points improve low-ohm readings.</li>
+            <li>Very short cables are harder to locate because meter lead resistance matters more.</li>
+            <li>Splices, corrosion, wet insulation, and multiple faults can skew results.</li>
+            <li>Estimate actual wire temperature, not room temperature, when the cable is in an attic, conduit, sun, freezer, or outside wall.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="screen-settings" class="screen">
+        <div class="panel">
+          <h2>Settings</h2>
+          <label class="check"><input id="gloveMode" type="checkbox" /> Glove Mode</label>
+          <label class="field">
+            <span>Calibration Adjustment %</span>
+            <input id="calibration" inputmode="decimal" type="number" step="0.1" value="0" />
+          </label>
+          <p class="muted">Use calibration only if you compare the app to a known cable length and want to offset the resistance table.</p>
+        </div>
+        <div class="panel">
+          <h2>About</h2>
+          <p><strong>Fault Locator Pro</strong> estimates distance to a short in solid copper two-conductor cable using loop resistance.</p>
+          <p class="muted">This is an estimate. Actual fault location can vary due to meter accuracy, wire tolerance, temperature, splices, corrosion, and multiple faults.</p>
+        </div>
+      </section>
+    </main>
+
+    <nav class="tabs">
+      <button class="tab active" data-screen="calc">Calculator</button>
+      <button class="tab" data-screen="ref">Reference</button>
+      <button class="tab" data-screen="help">Help</button>
+      <button class="tab" data-screen="settings">Settings</button>
+    </nav>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

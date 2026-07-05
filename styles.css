@@ -1,0 +1,40 @@
+:root{
+  --bg:#080b0f;--panel:#121922;--panel2:#172230;--text:#eef6ff;--muted:#9fb2c7;
+  --accent:#2fe3ff;--accent2:#7cff9a;--warn:#ffcc66;--danger:#ff6b6b;--border:#26384b;
+}
+*{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+body{padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+#app{max-width:640px;margin:0 auto;min-height:100vh;padding:16px 14px 86px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin:8px 2px 16px}
+.eyebrow{font-size:12px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase}
+h1{font-size:28px;margin:2px 0 0} h2{margin:0 0 10px}
+.badge{border:1px solid var(--border);border-radius:999px;padding:7px 10px;color:var(--muted);font-size:12px}
+.screen{display:none}.screen.active{display:block}
+.panel,.result-card,.details{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--border);border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:0 12px 30px rgba(0,0,0,.28)}
+.grid.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field span{display:block;color:var(--muted);font-size:13px;margin-bottom:6px}.field em{font-style:normal;opacity:.7}
+input,select{width:100%;min-height:52px;border:1px solid #31506d;background:#0d141c;color:var(--text);font-size:20px;border-radius:14px;padding:0 12px;outline:none}
+input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(47,227,255,.14)}
+.temp-presets{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px}
+button{border:0;border-radius:14px;min-height:46px;font-weight:700;color:var(--text);background:#213247;font-size:15px}
+button.selected{background:#17606d;color:white}.primary{background:linear-gradient(135deg,#149eb5,#1dceef);color:#031014}.secondary{background:#26384b}
+.result-card{text-align:center}
+.result-label{color:var(--muted);font-size:14px;text-transform:uppercase;letter-spacing:.1em}.distance{font-size:58px;line-height:1.05;font-weight:900;color:var(--accent);margin:8px 0}
+.quality{color:var(--accent2);font-weight:700;margin-bottom:14px}
+.line-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}
+.track{height:18px;background:#061018;border:1px solid #244159;border-radius:999px;margin:8px 0 8px;position:relative;overflow:visible}
+.fill{height:100%;width:0;background:linear-gradient(90deg,#1a9fb8,#7cff9a);border-radius:999px}
+.pin{position:absolute;top:-7px;left:0;width:6px;height:30px;background:#fff;border-radius:4px;box-shadow:0 0 14px var(--accent)}
+.percent-text{color:var(--muted);font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.stats div{background:#0c131b;border:1px solid #24384b;border-radius:14px;padding:10px 6px}.stats span{display:block;color:var(--muted);font-size:12px}.stats strong{font-size:15px}
+.warning{background:rgba(255,204,102,.12);border:1px solid rgba(255,204,102,.5);border-radius:14px;padding:10px;margin-top:12px;text-align:left;color:#ffe0a3}.hidden{display:none}
+.details summary{font-weight:800}.details pre{white-space:pre-wrap;color:#d7e8ff;font-size:13px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:10px;border-bottom:1px solid var(--border);text-align:right}th:first-child,td:first-child{text-align:left}
+.muted{color:var(--muted);line-height:1.45}.steps,.tips{padding-left:20px;line-height:1.55}.steps li,.tips li{margin-bottom:10px}
+.check{display:flex;align-items:center;gap:10px;font-size:18px;margin-bottom:16px}.check input{width:24px;height:24px;min-height:24px}
+.tabs{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));width:min(620px,calc(100% - 20px));display:grid;grid-template-columns:repeat(4,1fr);gap:6px;background:rgba(10,16,23,.86);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:22px;padding:7px}
+.tab{font-size:12px;min-height:48px;background:transparent;color:var(--muted)}.tab.active{background:#173145;color:var(--accent);box-shadow:inset 0 0 0 1px #245471}
+body.glove input,body.glove select{min-height:66px;font-size:24px}body.glove button{min-height:58px;font-size:17px}body.glove .distance{font-size:68px}
+@media(max-width:420px){.grid.two{grid-template-columns:1fr}.distance{font-size:48px}.stats{grid-template-columns:1fr}.temp-presets{grid-template-columns:1fr 1fr}}
