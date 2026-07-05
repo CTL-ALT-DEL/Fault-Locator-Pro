@@ -8,7 +8,7 @@ Fault Locator Pro
 
 The app calculates the estimated fault location by using: 
 
--   Wire gauge (AWG)
+-   Wire gauge (AWG) 
 -   Measured loop resistance (ohms)
 -   Estimated wire temperature
 -   Optional total cable length
