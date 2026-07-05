@@ -22,20 +22,16 @@
       <h1>Fault Locator Pro</h1>
     </div>
   </div>
-  <div class="ver">v13</div>
+  <div class="ver">v14</div>
 </header>
 
 <main>
 <section id="test" class="screen active">
   <div class="meter">
     <div class="display">
-      <div class="fault-row">
-        <select id="faultType" aria-label="Fault type">
-          <option value="short">⚡ Dead Short</option>
-          <option value="ground">⏚ Ground Fault</option>
-          <option value="partial">◒ Resistive Fault</option>
-          <option value="unknown">? Unknown Fault</option>
-        </select>
+      <div class="auto-fault">
+        <span id="faultIcon">✓</span>
+        <span id="faultLabel">NORMAL</span>
       </div>
       <div id="distance">-- ft</div>
       <div id="status">Enter a meter reading</div>
@@ -58,6 +54,21 @@
         <button type="button" data-filter="thermostat">HVAC</button>
       </div>
       <div id="wireResults" class="wire-results"></div>
+    </div>
+
+    <div class="mode-row">
+      <label>Test Mode
+        <select id="testMode">
+          <option value="pair" selected>Across Pair / Loop</option>
+          <option value="ground">Conductor to Ground</option>
+        </select>
+      </label>
+      <label>Expected Length
+        <select id="lengthBasis">
+          <option value="entered" selected>Use entered length</option>
+          <option value="estimate500">Estimate 500 ft</option>
+        </select>
+      </label>
     </div>
 
     <div class="grid">
@@ -100,6 +111,11 @@
   </div>
 
   <div id="warning" class="warning hidden"></div>
+
+  <div class="card guidance-card">
+    <h2>Technician Guidance</h2>
+    <div id="guidanceText" class="guidance">Enter a meter reading and the app will suggest next steps.</div>
+  </div>
 
   <details class="card">
     <summary>Fault position details</summary>
@@ -154,22 +170,49 @@
 
 <section id="help" class="screen">
   <div class="card">
-    <h2>How to Test</h2>
+    <h2>How to Test with a Digital Multimeter</h2>
     <ol>
-      <li>Turn power off and verify no voltage is present.</li>
-      <li>Disconnect both conductors from all devices and equipment.</li>
-      <li>Set your digital multimeter to ohms.</li>
-      <li>Short the meter leads and use REL/Zero if available.</li>
-      <li>Measure across the two conductors at the same end.</li>
-      <li>Enter the loop resistance into the app.</li>
+      <li><strong>De-energize first.</strong> Turn the circuit off and verify no voltage is present before switching to ohms.</li>
+      <li><strong>Isolate the cable.</strong> Disconnect both conductors from panels, modules, relays, EOL resistors, NAC appliances, detectors, and any connected equipment.</li>
+      <li><strong>Discharge stored voltage.</strong> Long cable runs and connected electronics can hold stray voltage. Confirm the meter reads near 0 V before measuring resistance.</li>
+      <li><strong>Zero the meter leads.</strong> Touch the probes together and use REL/Zero if available. If not, mentally subtract the lead resistance on very low readings.</li>
+      <li><strong>Across-pair test.</strong> Measure between the two conductors at the same end of the cable. This is the normal distance-to-short mode.</li>
+      <li><strong>Ground-fault test.</strong> Measure each conductor to building ground, conduit, shield, or drain wire. A low-ohm reading indicates a likely ground fault.</li>
+      <li><strong>Check both ends if possible.</strong> A clean single fault should roughly agree when measured from opposite ends. Big disagreement can mean multiple faults, bad splices, devices still connected, or wet/corroded cable.</li>
     </ol>
   </div>
+
+  <div class="card">
+    <h2>Troubleshooting Faults</h2>
+    <ul class="help-list">
+      <li><strong>Dead short near test end:</strong> Very low ohms. Recheck meter lead zero, disconnect devices, inspect the first boxes, junctions, and terminations.</li>
+      <li><strong>Ground fault:</strong> Test each conductor to ground. Look for staples, damaged jacket, wet boxes, conduit rub-through, shield/drain contact, or devices touching grounded metal.</li>
+      <li><strong>Bad device or module:</strong> If the fault disappears when devices are removed, reconnect one device at a time until the fault returns.</li>
+      <li><strong>Stray voltage:</strong> If voltage exists on the pair, resistance readings will be unreliable. Find the source before using ohms mode.</li>
+      <li><strong>Partial or resistive fault:</strong> Higher-than-expected resistance can point to corrosion, water, damaged insulation, loose splices, or a device still in circuit.</li>
+      <li><strong>Normal loop reading:</strong> If the reading matches the expected resistance for the cable length, the conductors may simply be looped/shorted at the far end for testing.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Klein ET450 Tracer Tips</h2>
+    <ol>
+      <li>The ET450 can trace energized or de-energized breakers, fuses, and wires.</li>
+      <li>For de-energized tracing, isolate the cable and connect the transmitter leads to the target conductors as instructed by the Klein manual.</li>
+      <li>Start with lower receiver sensitivity and increase only as needed. Too much sensitivity can make adjacent cables look like the target.</li>
+      <li>Trace from the test end toward the expected fault distance calculated by the app.</li>
+      <li>If the signal suddenly drops, changes direction, or spreads into other conductors, inspect nearby boxes, splices, devices, metal edges, and damaged cable points.</li>
+      <li>Use the receiver’s NCV function only as a voltage-presence aid. Confirm with a meter before touching conductors.</li>
+      <li>Do not expose the ET450 to rain, snow, or moisture, and follow the CAT rating and safety instructions in the Klein manual.</li>
+    </ol>
+  </div>
+
   <div class="card">
     <h2>Update History</h2>
     <div class="update-log">
+      <p><b>v14</b> Added automatic fault diagnosis, technician guidance, expanded DMM help, troubleshooting guide, and Klein ET450 section.</p>
       <p><b>v13</b> Rebuilt front-panel wire lookup, fixed fault type selector, lighter ohm input placeholder, added update history.</p>
-      <p><b>v12</b> Attempted front-panel lookup and fault-type improvements.</p>
-      <p><b>v10-v11</b> Added Smart Cable Selector, wire database, job report changes, and fault-type controls.</p>
+      <p><b>v10-v12</b> Added Smart Cable Selector, wire database, job report changes, and fault-type controls.</p>
       <p><b>v8-v9</b> Added instrument style, GPS, wire lookup, custom wire values, and job report tools.</p>
       <p><b>v1-v7</b> Initial calculator, temperature correction, PWA support, job history, and iPhone layout.</p>
     </div>

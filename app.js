@@ -3,8 +3,8 @@
 
 const AWG = {"14":2.525,"16":4.016,"18":6.385,"22":16.14,"24":25.67};
 const ALPHA = 0.00393;
-const JOBS = "fault_locator_v13_jobs";
-const SETTINGS = "fault_locator_v13_settings";
+const JOBS = "fault_locator_v14_jobs";
+const SETTINGS = "fault_locator_v14_settings";
 let selectedWire = {name:"22 AWG Solid Copper", gauge:"22", ohms1000:16.14, isLoopValue:false, tempComp:true};
 let gpsData = null;
 
@@ -33,9 +33,41 @@ const read = id => { const v = parseFloat($(id).value); return Number.isFinite(v
 const fmt = (v,d=1) => Number.isFinite(v) ? v.toFixed(d) : "--";
 const makeId = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now()+"-"+Math.random());
 
-function faultTypeText(){
-  const sel = $("faultType");
-  return sel.options[sel.selectedIndex].text;
+function expectedLoopOhms(){
+  const tempF = read("temp");
+  const lengthEntered = read("length");
+  const basis = $("lengthBasis") ? $("lengthBasis").value : "entered";
+  const length = Number.isFinite(lengthEntered) && lengthEntered > 0 ? lengthEntered : 500;
+  const diagnosis = diagnose(ohms);
+  updateDiagnosisUI(diagnosis);
+
+  const tempC = (tempF - 32) * 5 / 9;
+  const tempFactor = selectedWire.tempComp ? (1 + ALPHA * (tempC - 20)) : 1;
+  const calFactor = 1 + (read("calibration") || 0) / 100;
+  const conductorPerFt = (selectedWire.ohms1000 / 1000) * tempFactor * calFactor;
+  const loopPerFt = selectedWire.isLoopValue ? conductorPerFt : conductorPerFt * 2;
+  return {length, loopPerFt, expected: loopPerFt * length, estimated: !(Number.isFinite(lengthEntered) && lengthEntered > 0) || basis === "estimate500"};
+}
+
+function diagnose(ohms){
+  const mode = $("testMode") ? $("testMode").value : "pair";
+  if (!Number.isFinite(ohms) || ohms <= 0) {
+    return {icon:"✓", label:"NORMAL", level:"good", guidance:"No resistance reading entered. With no measured short, status is normal. Enter a stable ohm reading to calculate distance or get troubleshooting guidance."};
+  }
+
+  const e = expectedLoopOhms();
+  const lowLimit = e.expected * 0.80;
+  const highLimit = e.expected * 1.20;
+
+  if (mode === "ground") {
+    if (ohms < 1000) return {icon:"⏚", label:"GROUND FAULT", level:"bad", guidance:"Low resistance to ground suggests a ground fault. Disconnect field devices and test each conductor to ground. Inspect metal boxes, conduit edges, staples, wet locations, shields, drain wires, and device bases."};
+    return {icon:"✓", label:"NORMAL", level:"good", guidance:"Ground test does not show a low-resistance fault. If symptoms remain, test conductor-to-conductor and check for stray voltage before using resistance mode."};
+  }
+
+  if (ohms < 0.05) return {icon:"⚡", label:"NEAR SHORT", level:"bad", guidance:"Very low resistance usually means a dead short near the test end or meter leads not zeroed. Short your probes, use REL/Zero if available, then inspect the first boxes and terminations."};
+  if (ohms >= lowLimit && ohms <= highLimit) return {icon:"✓", label:"NORMAL", level:"good", guidance:`Reading is within expected range for ${e.estimated ? "an estimated 500 ft run" : "the entered cable length"}. This may be a normal loop/short at the far end for testing, not a field fault.`};
+  if (ohms < lowLimit) return {icon:"⚡", label:"DEAD SHORT", level:"bad", guidance:"Reading is lower than expected for the cable length. The app will estimate distance to the short. Isolate the cable, remove devices/EOL parts, and inspect near the calculated location."};
+  return {icon:"◒", label:"RESISTIVE / OPEN", level:"warn", guidance:"Reading is higher than expected. Look for corrosion, water, loose splices, damaged conductors, wrong wire selection, bad devices still connected, or a partial/open fault rather than a clean short."};
 }
 
 function updateSelectedWireUI(){
@@ -83,6 +115,13 @@ function chooseWire(id){
   setTimeout(()=>$("ohms").focus(),150);
 }
 
+function updateDiagnosisUI(d){
+  $("faultIcon").textContent = d.icon;
+  $("faultLabel").textContent = d.label;
+  $("status").textContent = d.label;
+  $("guidanceText").innerHTML = `<span class="${d.level === "good" ? "good" : d.level === "bad" ? "bad" : "warn-text"}">${d.label}:</span> ${d.guidance}`;
+}
+
 function calculate(){
   updateSelectedWireUI();
   const ohms = read("ohms");
@@ -93,9 +132,14 @@ function calculate(){
   $("warning").textContent = "";
 
   if (!Number.isFinite(ohms) || ohms <= 0) {
+    const d = diagnose(ohms);
+    updateDiagnosisUI(d);
     blank();
     return null;
   }
+
+  const diagnosis = diagnose(ohms);
+  updateDiagnosisUI(diagnosis);
 
   const tempC = (tempF - 32) * 5 / 9;
   const tempFactor = selectedWire.tempComp ? (1 + ALPHA * (tempC - 20)) : 1;
@@ -107,7 +151,7 @@ function calculate(){
   const tolerance = Math.max(distance * .03, 2);
 
   $("distance").textContent = fmt(distance,1)+" ft";
-  $("status").textContent = faultTypeText();
+  $("status").textContent = diagnosis.label;
   $("range").textContent = Math.max(0,distance-tolerance).toFixed(0)+"–"+(distance+tolerance).toFixed(0)+" ft";
   $("tempAdj").textContent = (tempAdjust>=0?"+":"")+fmt(tempAdjust,1)+"%";
 
@@ -130,7 +174,7 @@ function calculate(){
   if (ohms < .05) warn("Reading is very low. Zero meter leads if possible.");
 
   $("math").textContent = `Wire: ${selectedWire.name}
-Fault Type: ${faultTypeText()}
+Fault Status: ${diagnosis.label}
 Measured loop resistance: ${ohms} Ω
 Base resistance: ${selectedWire.ohms1000} Ω / 1000 ft
 Wire temperature: ${tempF}°F
@@ -138,12 +182,12 @@ Temperature factor: ${fmt(tempFactor,5)}
 Loop resistance per foot: ${fmt(loopPerFt,6)} Ω/ft
 Distance = ${ohms} ÷ ${fmt(loopPerFt,6)} = ${fmt(distance,2)} ft`;
 
-  return {id:makeId(),date:new Date().toLocaleString(),wireName:selectedWire.name,gauge:selectedWire.gauge,ohms,tempF,length,calibration,distance,tolerance,tempAdjust,faultType:faultTypeText(),gps:gpsData};
+  return {id:makeId(),date:new Date().toLocaleString(),wireName:selectedWire.name,gauge:selectedWire.gauge,ohms,tempF,length,calibration,distance,tolerance,tempAdjust,faultType:diagnosis.label,gps:gpsData};
 }
 
 function blank(){
   $("distance").textContent = "-- ft";
-  $("status").textContent = "Enter a meter reading";
+  $("status").textContent = "NORMAL";
   $("range").textContent = "--";
   $("remaining").textContent = "--";
   $("tempAdj").textContent = "0.0%";
@@ -270,7 +314,8 @@ function init(){
   document.querySelectorAll("[data-temp]").forEach(b=>b.addEventListener("click",()=>{ document.querySelectorAll("[data-temp]").forEach(x=>x.classList.remove("picked")); b.classList.add("picked"); $("temp").value=b.dataset.temp; calculate(); }));
 
   $("gauge").addEventListener("change",()=>{ selectedWire={name:$("gauge").value+" AWG Solid Copper",gauge:$("gauge").value,ohms1000:AWG[$("gauge").value],isLoopValue:false,tempComp:true}; updateSelectedWireUI(); calculate(); });
-  $("faultType").addEventListener("change",calculate);
+  $("testMode").addEventListener("change",calculate);
+  $("lengthBasis").addEventListener("change",calculate);
   document.querySelectorAll("input,textarea").forEach(el=>el.addEventListener("input",()=>{ calculate(); if(el.id==="calibration")saveSettings(); }));
   $("useCustom").addEventListener("click",()=>{ const oh=read("customOhms"); if(!Number.isFinite(oh)||oh<=0){toast("Enter valid Ω / 1000 ft");return;} selectedWire={name:$("customName").value.trim()||"Custom Wire",gauge:"custom",ohms1000:oh,isLoopValue:false,tempComp:false}; updateSelectedWireUI(); calculate(); toast("Custom wire selected"); });
   $("clearBtn").addEventListener("click",()=>{ $("ohms").value=""; $("length").value=""; calculate(); $("ohms").focus(); });

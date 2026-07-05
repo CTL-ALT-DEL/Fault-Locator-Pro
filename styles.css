@@ -34,3 +34,17 @@ nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(sa
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom));background:#151515;border:1px solid var(--yellow);border-radius:999px;padding:10px 16px}
 body.large input,body.large select,body.large button{min-height:68px;font-size:21px}body.large #distance{font-size:70px}
 @media(max-width:440px){.grid{grid-template-columns:1fr}#distance{font-size:50px}.metrics{grid-template-columns:1fr}.chips{grid-template-columns:1fr 1fr}.filter-buttons{grid-template-columns:1fr 1fr}.tab{font-size:11px}}
+
+/* v14 automatic diagnosis and help updates */
+.auto-fault{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:rgba(255,255,255,.34);border:1px solid rgba(0,0,0,.16);border-radius:999px;padding:6px 12px;margin-bottom:8px;font-weight:900;font-size:13px}
+#faultIcon{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.12)}
+.mode-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.guidance-card h2{font-size:18px;margin-bottom:8px}
+.guidance{color:#ddd;line-height:1.45}
+.guidance .good{color:var(--green);font-weight:900}
+.guidance .warn-text{color:var(--warn);font-weight:900}
+.guidance .bad{color:#ff9b9b;font-weight:900}
+.help-list{padding-left:20px;line-height:1.55}
+.help-list li{margin-bottom:10px}
+.ohms-input::placeholder{font-size:15px;color:#bdbdbd;opacity:.45;font-weight:300}
+@media(max-width:440px){.mode-row{grid-template-columns:1fr}}
