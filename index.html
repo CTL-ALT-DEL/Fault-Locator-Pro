@@ -19,7 +19,7 @@
     <div class="eyebrow">Cable Fault Field Instrument</div>
     <h1>Fault Locator Pro</h1>
   </div>
-  <div class="ver">v19</div>
+  <div class="ver">v20</div>
 </header>
 
 <main>
@@ -64,7 +64,7 @@
       <div class="filters">
         <button data-filter="" type="button">All</button>
         <button data-filter="fire" type="button">Fire</button>
-        <button data-filter="protectowire" type="button">Protect</button>
+        <button data-filter="protectowire" type="button">Protectowire</button>
         <button data-filter="cat" type="button">CAT</button>
       </div>
       <div id="wireResults"></div>
@@ -87,6 +87,11 @@
 
   <div class="guidance-card">
     <div id="guidanceText">Enter a meter reading for guidance.</div>
+    <div class="pro-strip">
+      <div><span>Health</span><b id="healthMini">--</b></div>
+      <div><span>Signal</span><b id="signalMini">--</b></div>
+      <div><span>Mode</span><b id="modeMini">PAIR</b></div>
+    </div>
   </div>
 </section>
 
