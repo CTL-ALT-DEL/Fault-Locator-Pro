@@ -26,6 +26,13 @@ function formatWireName(name) {
 
 function updateWireUI() {
   $("wire-name").innerHTML = formatWireName(selectedWire.name);
+  const detail = $("wire-detail");
+  if (detail) {
+    const resistance = selectedWire.ohmsPerFt
+      ? `${selectedWire.ohmsPerFt} Ω/ft`
+      : `${selectedWire.ohms1000} Ω/1000 ft`;
+    detail.textContent = `${selectedWire.category} • ${selectedWire.gauge || "custom"} • ${resistance}`;
+  }
 }
 
 function selectWireById(id) {
