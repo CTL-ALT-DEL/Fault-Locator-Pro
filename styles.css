@@ -38,3 +38,14 @@ body.large input,body.large select,body.large button{min-height:66px;font-size:2
 .meter{border-radius:30px}
 .chips button{font-size:14px}
 @media(max-width:440px){.chips{grid-template-columns:1fr 1fr}}
+
+/* v9 additions */
+.fault-type-row{margin-top:8px}
+.display-label #faultIcon{font-size:16px;margin-right:4px}
+.secondary{background:#303030;color:white}
+.wire-results{margin-top:12px;display:grid;gap:8px}
+.wire-card{background:#0b0b0b;border:1px solid #333;border-radius:16px;padding:12px}
+.wire-card button{width:100%;margin-top:8px;background:var(--yellow);color:#111}
+.wire-name{font-weight:900;color:white}
+.wire-meta{font-size:12px;color:var(--muted);line-height:1.35;margin-top:4px}
+.wire-pill{display:inline-block;border:1px solid #444;border-radius:999px;padding:3px 8px;margin:6px 5px 0 0;color:var(--yellow);font-size:11px}

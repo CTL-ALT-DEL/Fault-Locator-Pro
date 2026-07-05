@@ -1,6 +1,21 @@
 (() => {
   "use strict";
   const AWG = {"14":2.525,"16":4.016,"18":6.385,"22":16.14,"24":25.67};
+  const WIRE_DB = [
+    {id:"awg14", name:"14 AWG Solid Copper", category:"Standard Copper", ohms1000:2.525, gauge:"14", tags:"14 awg copper solid"},
+    {id:"awg16", name:"16 AWG Solid Copper", category:"Standard Copper", ohms1000:4.016, gauge:"16", tags:"16 awg copper solid"},
+    {id:"awg18", name:"18 AWG Solid Copper", category:"Standard Copper", ohms1000:6.385, gauge:"18", tags:"18 awg copper solid"},
+    {id:"awg22", name:"22 AWG Solid Copper", category:"Standard Copper", ohms1000:16.14, gauge:"22", tags:"22 awg copper solid"},
+    {id:"awg24", name:"24 AWG Solid Copper", category:"Standard Copper", ohms1000:25.67, gauge:"24", tags:"24 awg copper solid"},
+    {id:"fplr18", name:"18 AWG Fire Alarm Cable / FPLR-FPLP", category:"Fire Alarm", ohms1000:6.5, gauge:"18", tags:"18/2 18 awg fplr fplp fire alarm slc nac"},
+    {id:"fplr16", name:"16 AWG Fire Alarm Cable / FPLR-FPLP", category:"Fire Alarm", ohms1000:4.1, gauge:"16", tags:"16/2 16 awg fplr fplp fire alarm nac slc"},
+    {id:"fplr14", name:"14 AWG Fire Alarm Cable / FPLR-FPLP", category:"Fire Alarm", ohms1000:2.6, gauge:"14", tags:"14/2 14 awg fplr fplp fire alarm nac"},
+    {id:"fplr12", name:"12 AWG Fire Alarm Cable / FPLR-FPLP", category:"Fire Alarm", ohms1000:1.8, gauge:"custom", tags:"12/2 12 awg fplr fplp fire alarm nac"},
+    {id:"protectowire_phsc", name:"Protectowire PHSC Digital Linear Heat Detector", category:"Protectowire", ohmsPerFt:0.185, gauge:"custom", tags:"protectowire phsc linear heat detector steel"},
+    {id:"protectowire_plr", name:"Protectowire PLR Low Resistance Linear Heat Detector", category:"Protectowire", ohmsPerFt:0.058, gauge:"custom", tags:"protectowire plr low resistance linear heat detector"},
+    {id:"protectowire_cti", name:"Protectowire CTI Linear Heat Detector", category:"Protectowire", ohmsPerFt:0.282, gauge:"custom", tags:"protectowire cti linear heat detector"}
+  ];
+  let customWire = null;
   const ALPHA = 0.00393;
   const JOBS = "fault_locator_v8_jobs";
   const SETTINGS = "fault_locator_v8_settings";
@@ -30,8 +45,11 @@
     const tempC = (tempF - 32) * 5 / 9;
     const tempFactor = 1 + ALPHA * (tempC - 20);
     const calFactor = 1 + calibration / 100;
-    const conductorPerFt = (AWG[gauge] / 1000) * tempFactor * calFactor;
-    const loopPerFt = conductorPerFt * 2;
+    const baseOhms1000 = customWire ? customWire.ohms1000 : AWG[gauge];
+    const tempApplies = customWire ? customWire.temperatureCompensated : true;
+    const effectiveTempFactor = tempApplies ? tempFactor : 1;
+    const conductorPerFt = (baseOhms1000 / 1000) * effectiveTempFactor * calFactor;
+    const loopPerFt = customWire && customWire.isLoopValue ? conductorPerFt : conductorPerFt * 2;
     const distance = ohms / loopPerFt;
     const tempAdjust = (tempFactor - 1) * 100;
     const tolerance = Math.max(distance * 0.03, 2);
@@ -57,7 +75,8 @@
 
     $("math").textContent = `Gauge: ${gauge} AWG solid copper
 Measured loop resistance: ${ohms} Ω
-Base resistance: ${AWG[gauge]} Ω / 1000 ft @ 68°F
+Wire selected: ${customWire ? customWire.name : gauge + " AWG solid copper"}
+Base resistance: ${customWire ? customWire.ohms1000 : AWG[gauge]} Ω / 1000 ft
 Wire temperature: ${tempF}°F
 Temperature factor: ${fmt(tempFactor, 5)}
 Calibration factor: ${fmt(calFactor, 5)}
@@ -105,7 +124,8 @@ Distance = ${ohms} ÷ ${fmt(loopPerFt, 6)} = ${fmt(distance, 2)} ft`;
 Date: ${item.date}
 Customer/Site: ${item.customer || "Not entered"}
 Cable ID/Location: ${item.cableId || "Not entered"}
-Gauge: ${item.gauge} AWG solid copper
+Wire: ${item.wireName || item.gauge + " AWG solid copper"}
+Fault Type: ${faultTypeText(item.faultType || "short")}
 Loop Resistance: ${item.ohms} Ω
 Wire Temperature: ${item.tempF}°F
 Cable Length: ${Number.isFinite(item.length) ? item.length + " ft" : "Not entered"}
@@ -154,7 +174,9 @@ Notes: ${item.notes || "None"}`;
   function loadJob(jobId) {
     const job = getJobs().find(j => j.id === jobId);
     if (!job) return;
-    $("gauge").value = job.gauge;
+    $("gauge").value = AWG[job.gauge] ? job.gauge : "22";
+    customWire = job.wireName && !AWG[job.gauge] ? {name: job.wireName, ohms1000: job.customOhms1000 || 16.14, temperatureCompensated:false} : null;
+    if ($("faultType")) $("faultType").value = job.faultType || "short";
     $("ohms").value = job.ohms;
     $("temp").value = job.tempF;
     $("length").value = Number.isFinite(job.length) ? job.length : "";
@@ -223,13 +245,94 @@ Notes: ${item.notes || "None"}`;
     localStorage.setItem(SETTINGS, JSON.stringify({largeMode:$("largeMode").checked, calibration:$("calibration").value}));
   }
 
+
+  function faultTypeText(value) {
+    const map = {
+      short: "Dead Short",
+      ground: "Ground Fault",
+      partial: "Partial / Resistive Fault",
+      open: "Open / Unknown"
+    };
+    return map[value] || "Dead Short";
+  }
+
+  function updateFaultIcon() {
+    const value = $("faultType") ? $("faultType").value : "short";
+    const iconMap = {short:"⚡", ground:"⏚", partial:"◒", open:"?"};
+    $("faultIcon").textContent = iconMap[value] || "⚡";
+    $("faultLabel").textContent = faultTypeText(value).toUpperCase();
+  }
+
+  function renderWireLookup() {
+    const query = ($("wireSearch").value || "").trim().toLowerCase();
+    const results = WIRE_DB.filter(w => {
+      const haystack = (w.name + " " + w.category + " " + w.tags).toLowerCase();
+      return !query || haystack.includes(query);
+    }).slice(0, 12);
+
+    $("wireResults").innerHTML = results.map(w => {
+      const ohms1000 = w.ohms1000 || (w.ohmsPerFt * 1000);
+      const note = w.ohmsPerFt ? `${w.ohmsPerFt} Ω/ft (${ohms1000.toFixed(1)} Ω/1000 ft)` : `${ohms1000} Ω/1000 ft`;
+      return `<div class="wire-card">
+        <div class="wire-name">${escapeHtml(w.name)}</div>
+        <div class="wire-meta">${escapeHtml(note)}</div>
+        <span class="wire-pill">${escapeHtml(w.category)}</span>
+        <button type="button" data-wire="${escapeHtml(w.id)}">Use This Wire</button>
+      </div>`;
+    }).join("") || `<div class="muted">No matching wire found. Use Custom Wire below.</div>`;
+
+    $("wireResults").querySelectorAll("[data-wire]").forEach(button => {
+      button.addEventListener("click", () => useWire(button.dataset.wire));
+    });
+  }
+
+  function useWire(wireId) {
+    const w = WIRE_DB.find(item => item.id === wireId);
+    if (!w) return;
+    if (w.gauge && AWG[w.gauge]) {
+      $("gauge").value = w.gauge;
+      customWire = null;
+    } else {
+      const ohms1000 = w.ohms1000 || (w.ohmsPerFt * 1000);
+      customWire = {
+        name: w.name,
+        ohms1000,
+        isLoopValue: Boolean(w.ohmsPerFt),
+        temperatureCompensated: false
+      };
+    }
+    calculate();
+    toast("Wire selected.");
+    screen("test");
+  }
+
+  function applyCustomWire() {
+    const ohms1000 = read("customOhms1000");
+    if (!Number.isFinite(ohms1000) || ohms1000 <= 0) {
+      toast("Enter valid Ω / 1000 ft.");
+      return;
+    }
+    customWire = {
+      name: $("customWireName").value.trim() || "Custom Wire",
+      ohms1000,
+      isLoopValue: false,
+      temperatureCompensated: false
+    };
+    calculate();
+    toast("Custom wire selected.");
+    screen("test");
+  }
+
   function init() {
     $("refRows").innerHTML = Object.entries(AWG).map(([g, r]) => `<tr><td>${g} AWG</td><td>${r.toFixed(3)}</td><td>${(r * 2).toFixed(3)}</td></tr>`).join("");
+    renderWireLookup();
+    updateFaultIcon();
     loadSettings();
     calculate();
     updateGps();
 
     document.querySelectorAll("input,select,textarea").forEach(el => el.addEventListener("input", () => {
+      if (el.id === "gauge") customWire = null;
       calculate();
       if (el.id === "calibration") saveSettings();
     }));
@@ -244,6 +347,10 @@ Notes: ${item.notes || "None"}`;
     $("focusOhms").addEventListener("click", () => { $("ohms").focus(); $("ohms").select(); });
     $("clearBtn").addEventListener("click", () => { $("ohms").value = ""; $("length").value = ""; calculate(); $("ohms").focus(); });
     $("saveBtn").addEventListener("click", saveJob);
+    $("jobSaveBtn").addEventListener("click", saveJob);
+    $("wireSearch").addEventListener("input", renderWireLookup);
+    $("applyCustomWire").addEventListener("click", applyCustomWire);
+    $("faultType").addEventListener("change", () => { updateFaultIcon(); calculate(); });
     $("copyBtn").addEventListener("click", () => { copyText(report()); toast("Report copied."); });
     $("gpsBtn").addEventListener("click", getGps);
     $("clearHistoryBtn").addEventListener("click", () => { if (confirm("Clear saved jobs?")) { setJobs([]); renderHistory(); } });

@@ -22,14 +22,14 @@
       <h1>Fault Locator Pro</h1>
     </div>
   </div>
-  <div class="ver">v8</div>
+  <div class="ver">v9</div>
 </header>
 
 <main>
 <section id="test" class="screen active">
   <div class="meter">
     <div class="display">
-      <div class="display-label">DISTANCE TO SHORT</div>
+      <div class="display-label"><span id="faultIcon">⚡</span> <span id="faultLabel">DEAD SHORT</span></div>
       <div id="distance">-- ft</div>
       <div id="status">Enter gauge and meter reading</div>
     </div>
@@ -97,7 +97,9 @@
     <button id="gpsBtn" type="button" class="primary">Use GPS Location</button>
     <p id="gpsStatus" class="muted">GPS not saved.</p>
     <a id="mapLink" class="maplink hidden" target="_blank" rel="noopener">Open GPS in Maps</a>
-    <button id="copyBtn" type="button" class="primary">Copy Report</button>
+    <button id="jobSaveBtn" type="button" class="primary">Save Job</button>
+    <button id="copyBtn" type="button" class="secondary">Copy Text Report</button>
+    <p class="muted">Copy Text Report puts the job summary on the clipboard so you can paste it into a text, email, or notes app.</p>
   </div>
 </section>
 
@@ -110,11 +112,26 @@
 
 <section id="ref" class="screen">
   <div class="card">
-    <h2>Wire Reference</h2>
-    <table><thead><tr><th>Gauge</th><th>Ω/1000 ft</th><th>Loop</th></tr></thead><tbody id="refRows"></tbody></table>
+    <h2>Wire Lookup</h2>
+    <input id="wireSearch" placeholder="Search: 18/2 FPLR, Protectowire, 16 AWG">
+    <div id="wireResults" class="wire-results"></div>
   </div>
+
+  <div class="card">
+    <h2>Custom Wire</h2>
+    <label>Wire Name<input id="customWireName" placeholder="Example: Special cable"></label>
+    <label>Resistance Ω / 1000 ft<input id="customOhms1000" type="number" inputmode="decimal" step="0.001" placeholder="Example: 6.5"></label>
+    <button id="applyCustomWire" type="button" class="primary">Use Custom Wire</button>
+    <p class="muted">Use this when a manufacturer spec sheet lists conductor resistance.</p>
+  </div>
+
   <details class="card">
-    <summary>Show Math</summary>
+    <summary>Standard AWG Reference</summary>
+    <table><thead><tr><th>Gauge</th><th>Ω/1000 ft</th><th>Loop</th></tr></thead><tbody id="refRows"></tbody></table>
+  </details>
+
+  <details class="card">
+    <summary>Show calculation math</summary>
     <pre id="math"></pre>
   </details>
 </section>
