@@ -417,3 +417,113 @@ nav{
     linear-gradient(180deg,#ffdf62,#f6b51d 55%,#be7e08);
   color:#111;
 }
+
+/* v22 rugged-plus refinements */
+.top-controls{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.top-controls button{
+  min-height:38px;
+  width:42px;
+  border-radius:12px;
+  font-size:18px;
+  padding:0;
+}
+#app.flash-mode{
+  box-shadow:inset 0 0 0 9999px rgba(255,255,255,.16);
+}
+.meter-fault-icon{
+  color:#050505 !important;
+  background:rgba(0,0,0,.04);
+  border-radius:9px;
+  animation:faultPulse 1.1s infinite;
+}
+.meter-fault-icon #faultIcon{
+  color:#050505 !important;
+  text-shadow:none;
+}
+@keyframes faultPulse{
+  0%,100%{opacity:1;filter:none}
+  50%{opacity:.32;filter:blur(.2px)}
+}
+#faultLabel{
+  color:#071205 !important;
+}
+.wire-panel{
+  border-radius:18px;
+  border:2px solid #070707;
+  background:
+    linear-gradient(180deg,#242424,#0a0a0a);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.11),0 6px 0 #000;
+}
+.wire-card{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:6px 8px;
+  align-items:center;
+}
+.wire-card .wire-name{
+  grid-column:1/2;
+}
+.wire-card .wire-meta{
+  grid-column:1/2;
+}
+.wire-card button{
+  grid-column:2/3;
+  grid-row:1/3;
+  min-width:66px;
+  align-self:stretch;
+  background:linear-gradient(180deg,#ffdf62,#f6b51d 55%,#be7e08);
+  color:#111;
+}
+.filters button{
+  font-size:8.5px;
+  line-height:1.05;
+}
+.compact-grid{
+  position:relative;
+}
+.compact-grid:before{
+  content:"WIRE SELECTION";
+  position:absolute;
+  top:-17px;
+  left:11px;
+  color:var(--fluke-yellow);
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.08em;
+}
+.mini-row:before{
+  content:"MEASURE";
+  position:absolute;
+}
+.guidance-card:before{
+  content:"AI TECHNICIAN ADVICE";
+  display:block;
+  color:var(--fluke-yellow);
+  font-weight:900;
+  font-size:10px;
+  letter-spacing:.08em;
+  margin-bottom:4px;
+}
+.lcd{
+  position:relative;
+}
+.lcd:after{
+  content:"";
+  pointer-events:none;
+  position:absolute;
+  inset:7px;
+  border-radius:10px;
+  background:linear-gradient(135deg,rgba(255,255,255,.18),transparent 38%);
+}
+.segments span.on:nth-child(n+15){
+  opacity:.72;
+}
+@media(max-height:720px){
+  .wire-card{padding:6px}
+  .wire-results{max-height:230px}
+  header{padding:8px 10px}
+}
