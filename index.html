@@ -16,13 +16,13 @@
 <div id="app">
 <header>
   <div>
-    <div class="eyebrow">Cable Fault Field Instrument</div>
+    
     <h1>Fault Locator Pro</h1>
   </div>
   <div class="top-controls">
     <button type="button" id="beepMini">🔊</button>
     <button type="button" id="lightMini">🔦</button>
-    <div class="ver">v22</div>
+    <div class="ver">v23</div>
   </div>
 </header>
 
@@ -76,8 +76,8 @@
       <div class="filters">
         <button data-filter="" type="button">All</button>
         <button data-filter="fire" type="button">Fire</button>
+        <button data-filter="cat" type="button">Data</button>
         <button data-filter="protectowire" type="button">Protectowire</button>
-        <button data-filter="cat" type="button">CAT</button>
       </div>
       <div id="wireResults"></div>
     </div>
@@ -127,24 +127,92 @@
 </section>
 
 <section id="help" class="screen">
-  <details class="card"><summary>DMM Test Steps</summary>
-    <ol><li>De-energize and verify no voltage.</li><li>Disconnect devices and EOL parts.</li><li>Zero meter leads.</li><li>Measure across pair or conductor to ground.</li><li>Enter stable ohm reading.</li></ol>
+  <details class="card help-detail">
+    <summary>DMM Test Procedure</summary>
+    <ol>
+      <li><strong>Verify power is off.</strong> Never use ohms mode on an energized circuit.</li>
+      <li><strong>Disconnect the cable.</strong> Remove both conductors from panels, modules, relays, EOL resistors, notification appliances, detector bases, and field devices.</li>
+      <li><strong>Check for stray voltage.</strong> Measure AC and DC voltage first. If voltage is present, find the source before using resistance mode.</li>
+      <li><strong>Zero the meter leads.</strong> Short the probes together and use REL/Zero if available.</li>
+      <li><strong>Across-pair test.</strong> Measure conductor-to-conductor for a short or loop reading.</li>
+      <li><strong>Ground-fault test.</strong> Measure each conductor to ground, conduit, shield, drain, or grounded metal.</li>
+      <li><strong>Compare from both ends.</strong> If possible, test from the opposite end to confirm the suspected distance.</li>
+    </ol>
   </details>
-  <details class="card"><summary>Troubleshooting</summary>
-    <ul><li>Low ohms: inspect nearby boxes and terminations.</li><li>Ground fault: check staples, conduit edges, wet boxes, shields/drain wires.</li><li>High ohms: look for corrosion, bad splices, device still connected, partial opens.</li></ul>
+
+  <details class="card help-detail">
+    <summary>Fault Locating Strategy</summary>
+    <ul class="help-list">
+      <li><strong>Dead short:</strong> Low ohms across the pair. Inspect near calculated distance, junction boxes, device bases, crushed cable, and splices.</li>
+      <li><strong>Ground fault:</strong> Low ohms from conductor to ground. Look for staples, metal box contact, conduit rub-through, wet locations, shield/drain contact, or damaged jacket.</li>
+      <li><strong>Bad device:</strong> If fault disappears after disconnecting devices, reconnect one at a time until the fault returns.</li>
+      <li><strong>Stray voltage:</strong> Resistance readings become unreliable. Locate backfed voltage, induced voltage, shared neutrals, or connected electronics.</li>
+      <li><strong>Resistive fault:</strong> Higher-than-expected reading may indicate water, corrosion, loose splice, partial open, wrong wire type, or devices still connected.</li>
+    </ul>
   </details>
-  <details class="card"><summary>Update History</summary>
-    <p class="muted"><b>v19</b> Compact single-screen design, stable rewrite, front-panel wire lookup, LCD bar, auto guidance.</p>
+
+  <details class="card help-detail">
+    <summary>Klein ET450 Tracer Tips</summary>
+    <ol>
+      <li>Use the ET450 as a tracing aid after the fault distance gives you a target area.</li>
+      <li>For de-energized tracing, isolate the cable and connect the transmitter to the target conductors.</li>
+      <li>Start with lower receiver sensitivity, then increase only as needed.</li>
+      <li>Trace toward the calculated distance and inspect boxes or splices near that point.</li>
+      <li>A sudden signal change can indicate a splice, branch, cable damage, or transition into another path.</li>
+      <li>Use NCV only as an alert. Confirm voltage with a meter before touching conductors.</li>
+    </ol>
+  </details>
+
+  <details class="card help-detail">
+    <summary>Resistor Color Chart</summary>
+    <div class="resistor-chart">
+      <table>
+        <thead><tr><th>Color</th><th>Digit</th><th>Multiplier</th><th>Tolerance</th></tr></thead>
+        <tbody>
+          <tr><td>Black</td><td>0</td><td>×1</td><td></td></tr>
+          <tr><td>Brown</td><td>1</td><td>×10</td><td>±1%</td></tr>
+          <tr><td>Red</td><td>2</td><td>×100</td><td>±2%</td></tr>
+          <tr><td>Orange</td><td>3</td><td>×1k</td><td></td></tr>
+          <tr><td>Yellow</td><td>4</td><td>×10k</td><td></td></tr>
+          <tr><td>Green</td><td>5</td><td>×100k</td><td>±0.5%</td></tr>
+          <tr><td>Blue</td><td>6</td><td>×1M</td><td>±0.25%</td></tr>
+          <tr><td>Violet</td><td>7</td><td>×10M</td><td>±0.1%</td></tr>
+          <tr><td>Gray</td><td>8</td><td>×100M</td><td>±0.05%</td></tr>
+          <tr><td>White</td><td>9</td><td>×1G</td><td></td></tr>
+          <tr><td>Gold</td><td></td><td>×0.1</td><td>±5%</td></tr>
+          <tr><td>Silver</td><td></td><td>×0.01</td><td>±10%</td></tr>
+        </tbody>
+      </table>
+    </div>
   </details>
 </section>
 
-<section id="settings" class="screen">
-  <div class="card">
-    <h2>Settings</h2>
-    <label>Calibration %
-      <input id="calibration" type="number" inputmode="decimal" step="0.1" value="0">
-    </label>
+<section id="about" class="screen">
+  <div class="card about-card">
+    <h2>About Fault Locator Pro</h2>
+    <p><b>App:</b> Fault Locator Pro</p>
+    <p><b>Version:</b> v23 Rugged Field Instrument Build</p>
+    <p><b>Purpose:</b> Estimate distance to shorts and ground faults using resistance measurements, wire resistance data, and technician-guided troubleshooting logic.</p>
+    <p><b>Developer:</b> David Bannerman</p>
+    <p><b>Contact:</b> <a href="mailto:David@Bannerman.us">David@Bannerman.us</a></p>
   </div>
+
+  <details class="card help-detail" open>
+    <summary>Revision History</summary>
+    <div class="update-log">
+      <p><b>v23</b> Polished rugged UI, improved wire buttons, click/mute behavior, dark LCD mode, About page, enhanced Help resource, resistor chart.</p>
+      <p><b>v22</b> Added rugged meter styling, expanded fire alarm cable database, and flashing fault annunciator.</p>
+      <p><b>v21</b> Added rugged LCD layout and front-panel fault icon.</p>
+      <p><b>v19-v20</b> Compact single-screen design and improved iPhone layout.</p>
+      <p><b>v1-v18</b> Initial calculator, wire lookup, GPS, job reports, LCD styling, and technician guidance.</p>
+    </div>
+  </details>
+
+  <details class="card help-detail">
+    <summary>Legal Disclaimer</summary>
+    <p class="muted">This app provides an engineering estimate only. Actual fault location can be affected by inaccurate wire selection, temperature, corrosion, splices, devices still connected, parallel paths, ground leakage, wet cable, meter accuracy, and multiple faults.</p>
+    <p class="muted">Always follow electrical safety practices, de-energize circuits before resistance testing, verify with a meter, and comply with applicable codes, manufacturer instructions, and site procedures.</p>
+  </details>
 </section>
 </main>
 
@@ -153,7 +221,7 @@
   <button class="tab" data-screen="job" type="button">Job</button>
   <button class="tab" data-screen="history" type="button">Jobs</button>
   <button class="tab" data-screen="help" type="button">Help</button>
-  <button class="tab" data-screen="settings" type="button">Set</button>
+  <button class="tab" data-screen="about" type="button">About</button>
 </nav>
 </div>
 <div id="toast" class="toast hidden"></div>
