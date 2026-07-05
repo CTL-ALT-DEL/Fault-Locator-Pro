@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Fault Locator">
-<meta name="theme-color" content="#0b0b0b">
+<meta name="theme-color" content="#070707">
 <title>Fault Locator Pro</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
@@ -22,20 +22,46 @@
       <h1>Fault Locator Pro</h1>
     </div>
   </div>
-  <div class="ver">v12</div>
+  <div class="ver">v13</div>
 </header>
 
 <main>
 <section id="test" class="screen active">
   <div class="meter">
     <div class="display">
-      <div class="display-label fault-display"><span id="faultIcon">⚡</span> <span id="faultLabel">DEAD SHORT</span></div>
+      <div class="fault-row">
+        <select id="faultType" aria-label="Fault type">
+          <option value="short">⚡ Dead Short</option>
+          <option value="ground">⏚ Ground Fault</option>
+          <option value="partial">◒ Resistive Fault</option>
+          <option value="unknown">? Unknown Fault</option>
+        </select>
+      </div>
       <div id="distance">-- ft</div>
-      <div id="status">Enter gauge and meter reading</div>
+      <div id="status">Enter a meter reading</div>
+    </div>
+
+    <button type="button" id="wireChooser" class="wire-chooser">
+      <span>Wire Selected</span>
+      <strong id="selectedWire">22 AWG Solid Copper</strong>
+      <em>Tap to search wire types</em>
+    </button>
+
+    <div id="wirePanel" class="wire-panel hidden">
+      <input id="wireSearch" placeholder="Search: FPLR, Protectowire, CAT5, 18 AWG">
+      <div class="filter-buttons">
+        <button type="button" data-filter="">All</button>
+        <button type="button" data-filter="fire">Fire</button>
+        <button type="button" data-filter="protectowire">Protectowire</button>
+        <button type="button" data-filter="cat">CAT</button>
+        <button type="button" data-filter="security">Security</button>
+        <button type="button" data-filter="thermostat">HVAC</button>
+      </div>
+      <div id="wireResults" class="wire-results"></div>
     </div>
 
     <div class="grid">
-      <label>Wire Gauge
+      <label>Gauge
         <select id="gauge">
           <option value="14">14 AWG</option>
           <option value="16">16 AWG</option>
@@ -45,12 +71,12 @@
         </select>
       </label>
       <label>Meter Reading Ω
-        <input id="ohms" type="number" inputmode="decimal" step="0.001" placeholder="3.23">
+        <input id="ohms" class="ohms-input" type="number" inputmode="decimal" step="0.001" placeholder="enter ohms">
       </label>
     </div>
 
-    <details>
-      <summary>Options</summary>
+    <details class="options">
+      <summary>Temperature, cable length & custom wire</summary>
       <div class="grid">
         <label>Wire Temp °F
           <input id="temp" type="number" inputmode="decimal" value="68">
@@ -65,14 +91,20 @@
         <button type="button" data-temp="90">Warm 90°</button>
         <button type="button" data-temp="120">Hot 120°</button>
       </div>
+      <div class="custom-wire">
+        <label>Custom Wire Name<input id="customName" placeholder="optional"></label>
+        <label>Custom Ω / 1000 ft<input id="customOhms" type="number" inputmode="decimal" step="0.001" placeholder="example 6.5"></label>
+        <button id="useCustom" type="button" class="primary">Use Custom Wire</button>
+      </div>
     </details>
   </div>
 
   <div id="warning" class="warning hidden"></div>
 
   <details class="card">
-    <summary>Fault Details</summary>
-    <div class="bar"><div id="fill"></div></div>
+    <summary>Fault position details</summary>
+    <div class="scale-labels"><span>Test End</span><span id="farLabel">Far End</span></div>
+    <div class="bar"><div id="fill"></div><div id="pin">▲</div></div>
     <p id="barText" class="muted">Enter cable length for position bar.</p>
     <div class="metrics">
       <div><span>Range</span><b id="range">--</b></div>
@@ -82,16 +114,14 @@
   </details>
 
   <div class="actions">
-    <button id="focusOhms" type="button">Enter Reading</button>
     <button id="clearBtn" type="button">Clear</button>
+    <button id="saveBtn" type="button" class="primary">Save Job</button>
   </div>
-  <button id="saveBtn" type="button" class="wide primary">Save Current Job</button>
 </section>
 
 <section id="job" class="screen">
   <div class="card">
     <h2>Job Report</h2>
-    <div class="job-number">Job # <span id="jobNumber">0001</span></div>
     <label>Customer / Site<input id="customer" placeholder="optional"></label>
     <label>Cable ID / Location<input id="cableId" placeholder="optional"></label>
     <label>Notes<textarea id="notes" rows="4" placeholder="optional"></textarea></label>
@@ -99,8 +129,8 @@
     <p id="gpsStatus" class="muted">GPS not saved.</p>
     <a id="mapLink" class="maplink hidden" target="_blank" rel="noopener">Open GPS in Maps</a>
     <button id="jobSaveBtn" type="button" class="primary">Save Job</button>
-    <button id="copyBtn" type="button" class="secondary">Copy Text Report</button>
-    <p class="muted">Copy Text Report puts the job summary on the clipboard so you can paste it into a text, email, or notes app.</p>
+    <button id="copyBtn" type="button">Copy Text Report</button>
+    <p class="muted">Copy Text Report places the job summary on your clipboard so you can paste it into Messages, Mail, or Notes.</p>
   </div>
 </section>
 
@@ -113,60 +143,9 @@
 
 <section id="ref" class="screen">
   <div class="card">
-    <h2>Smart Cable Selector</h2>
-    <p class="muted">Answer a few quick questions to narrow down likely cable types.</p>
-    <div class="selector-grid">
-      <label>System Type
-        <select id="smartSystem">
-          <option value="">Any</option>
-          <option value="fire">Fire Alarm</option>
-          <option value="protectowire">Protectowire</option>
-          <option value="security">Security / Controls</option>
-          <option value="network">Network / Data</option>
-          <option value="thermostat">Thermostat / HVAC</option>
-          <option value="standard">Standard Copper</option>
-        </select>
-      </label>
-      <label>Approx. Gauge
-        <select id="smartGauge">
-          <option value="">Any</option>
-          <option value="12">12 AWG</option>
-          <option value="14">14 AWG</option>
-          <option value="16">16 AWG</option>
-          <option value="18">18 AWG</option>
-          <option value="22">22 AWG</option>
-          <option value="24">24 AWG</option>
-        </select>
-      </label>
-    </div>
-    <button id="smartSearchBtn" type="button" class="primary">Find Matching Wires</button>
+    <h2>Wire Reference</h2>
+    <table><thead><tr><th>Wire</th><th>Resistance</th></tr></thead><tbody id="refRows"></tbody></table>
   </div>
-
-  <div class="card">
-    <h2>Wire Lookup</h2>
-    <input id="wireSearch" placeholder="Search: 18/2 FPLR, Protectowire, CAT5, 16 AWG">
-    <div class="quick-wire-buttons">
-      <button type="button" data-wirequick="18/2 FPLR">18/2 FPLR</button>
-      <button type="button" data-wirequick="16/2 FPLR">16/2 FPLR</button>
-      <button type="button" data-wirequick="Protectowire">Protectowire</button>
-      <button type="button" data-wirequick="CAT5">CAT5</button>
-    </div>
-    <div id="wireResults" class="wire-results"></div>
-  </div>
-
-  <div class="card">
-    <h2>Custom Wire</h2>
-    <label>Wire Name<input id="customWireName" placeholder="Example: Special cable"></label>
-    <label>Resistance Ω / 1000 ft<input id="customOhms1000" type="number" inputmode="decimal" step="0.001" placeholder="Example: 6.5"></label>
-    <button id="applyCustomWire" type="button" class="primary">Use Custom Wire</button>
-    <p class="muted">Use this when a manufacturer spec sheet lists conductor resistance.</p>
-  </div>
-
-  <details class="card">
-    <summary>Standard AWG Reference</summary>
-    <table><thead><tr><th>Gauge</th><th>Ω/1000 ft</th><th>Loop</th></tr></thead><tbody id="refRows"></tbody></table>
-  </details>
-
   <details class="card">
     <summary>Show calculation math</summary>
     <pre id="math"></pre>
@@ -184,6 +163,16 @@
       <li>Measure across the two conductors at the same end.</li>
       <li>Enter the loop resistance into the app.</li>
     </ol>
+  </div>
+  <div class="card">
+    <h2>Update History</h2>
+    <div class="update-log">
+      <p><b>v13</b> Rebuilt front-panel wire lookup, fixed fault type selector, lighter ohm input placeholder, added update history.</p>
+      <p><b>v12</b> Attempted front-panel lookup and fault-type improvements.</p>
+      <p><b>v10-v11</b> Added Smart Cable Selector, wire database, job report changes, and fault-type controls.</p>
+      <p><b>v8-v9</b> Added instrument style, GPS, wire lookup, custom wire values, and job report tools.</p>
+      <p><b>v1-v7</b> Initial calculator, temperature correction, PWA support, job history, and iPhone layout.</p>
+    </div>
   </div>
 </section>
 
