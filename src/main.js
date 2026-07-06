@@ -129,6 +129,7 @@ function updateCalculation() {
 function renderJobs() {
   const jobs = getJobs();
   renderTimeline($("timeline-chart"), $("timeline-insight"), jobs);
+  renderTimeline($("timeline-chart-full"), $("timeline-detail"), jobs, { detail: true });
   const list = $("job-list");
   list.innerHTML = jobs.length ? jobs.map(job => `
     <div class="job-item">
@@ -199,6 +200,17 @@ function boot() {
       clearJobs();
       renderJobs();
     }
+  });
+
+  $("timeline-chart").addEventListener("click", () => {
+    renderJobs();
+    $("chart-modal").classList.remove("hidden");
+    if (screen.orientation && screen.orientation.lock) screen.orientation.lock("landscape").catch(() => {});
+  });
+
+  $("close-chart").addEventListener("click", () => {
+    $("chart-modal").classList.add("hidden");
+    if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
   });
 
   $("add-segment").addEventListener("click", () => {

@@ -382,3 +382,27 @@ input,select,textarea{
     font-size:16px;
   }
 }
+
+/* 2.0.5 display and timeline polish */
+.distance-bar-row{grid-template-columns:62px 1fr!important;gap:7px!important;align-items:center!important}
+.distance-bar-row span{font-size:11px!important;font-weight:950!important;letter-spacing:.08em!important}
+.distance-bar{display:grid!important;grid-template-columns:repeat(18,1fr)!important;gap:2px!important;min-height:16px!important;overflow:hidden!important}
+.distance-bar span{display:block!important;height:15px!important;min-width:0!important}
+.distance{font-family:"Courier New",ui-monospace,SFMono-Regular,Menlo,monospace!important;font-weight:900!important;letter-spacing:.015em!important;transform:scaleX(.92);text-shadow:1px 1px 0 rgba(255,255,255,.18),-1px -1px 0 rgba(0,0,0,.22),0 0 2px rgba(6,18,5,.25)!important}
+.controls{gap:8px!important;padding:9px!important;align-items:stretch!important}
+.controls label{background:linear-gradient(180deg,#151515,#060606);border:1px solid #343434;border-radius:14px;padding:6px 7px 7px;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 3px 0 #000;font-size:10.5px!important}
+.controls input,.controls select{min-height:46px!important;font-size:21px!important;margin-top:5px!important;text-align:center;border-radius:11px!important}
+#input-mode{font-size:18px!important}
+#button-clear,#button-save{min-height:36px!important;font-size:12px!important;padding:4px 6px!important;align-self:end}
+.diagnostic-card{margin-top:18px!important;padding-top:12px!important}
+.card-title{text-align:right!important;font-size:13px!important;letter-spacing:.10em!important;margin-bottom:7px!important}
+.card-title:before{float:left;margin-top:4px}
+.timeline-clickable{cursor:pointer;box-shadow:0 0 0 1px rgba(245,181,27,.18),inset 0 0 20px rgba(0,0,0,.55)}
+.chart-modal{position:fixed;inset:0;z-index:200;background:#050505;padding:calc(10px + env(safe-area-inset-top)) 10px calc(10px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px}
+.chart-modal.hidden{display:none!important}
+.chart-modal-bar{display:flex;justify-content:space-between;align-items:center;color:var(--yellow);text-transform:uppercase;letter-spacing:.06em}
+.chart-modal-bar button{min-height:34px;font-size:12px;padding:4px 10px}
+#timeline-chart-full{flex:1;width:100%;min-height:260px;background:linear-gradient(180deg,#111,#030303);border:2px solid #333;border-radius:14px;box-shadow:inset 0 1px 16px rgba(0,0,0,.7),0 0 0 1px rgba(245,181,27,.18)}
+.timeline-detail{background:#0c0c0c;border:1px solid #333;border-left:4px solid var(--yellow);border-radius:12px;padding:9px;color:#ddd;font-size:13px;line-height:1.35}
+@media(orientation:portrait){.chart-modal:before{content:"Rotate iPhone for best chart view";color:#aaa;font-size:12px;text-align:center}}
+@media(max-height:740px){.controls input,.controls select{min-height:40px!important;font-size:18px!important}#button-clear,#button-save{min-height:34px!important}.diagnostic-card{margin-top:13px!important}}

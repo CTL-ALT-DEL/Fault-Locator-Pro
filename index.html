@@ -16,7 +16,7 @@
 <div id="splash" class="splash">
   <div class="splash-panel">
     <div class="splash-title">FAULT LOCATOR PRO</div>
-    <div class="splash-sub">Diagnostic system 2.0.4</div>
+    <div class="splash-sub">Diagnostic system 2.0.5</div>
     <div class="splash-line">Loading wire database...</div>
   </div>
 </div>
@@ -26,7 +26,7 @@
       <h1>Fault Locator Pro</h1>
       <div class="sub">Professional Diagnostic System</div>
     </div>
-    <div class="version">2.0.4</div>
+    <div class="version">2.0.5</div>
   </header>
 
   <main>
@@ -113,7 +113,7 @@
           <h2>Diagnostic Timeline</h2>
           <button id="clear-jobs" type="button">Clear</button>
         </div>
-        <svg id="timeline-chart" viewBox="0 0 320 150" preserveAspectRatio="none"></svg>
+        <svg id="timeline-chart" class="timeline-clickable" viewBox="0 0 320 150" preserveAspectRatio="none"></svg>
         <p id="timeline-insight" class="muted">Save readings to build a diagnostic trend.</p>
         <div id="job-list" class="job-list"></div>
       </div>
@@ -179,7 +179,7 @@
     <section id="screen-about" class="screen">
       <div class="card">
         <h2>About</h2>
-        <p><b>Fault Locator Pro</b> 2.0.4</p>
+        <p><b>Fault Locator Pro</b> 2.0.5</p>
         <p>Professional fire alarm and low-voltage diagnostic PWA.</p>
         <p><b>Developer:</b> David Bannerman</p>
         <p><b>Contact:</b> <a href="mailto:David@Bannerman.us">David@Bannerman.us</a></p>
@@ -203,6 +203,11 @@
       </details>
     </section>
   </main>
+  <div id="chart-modal" class="chart-modal hidden">
+    <div class="chart-modal-bar"><b>Diagnostic Timeline</b><button id="close-chart" type="button">Close</button></div>
+    <svg id="timeline-chart-full" viewBox="0 0 760 360" preserveAspectRatio="none"></svg>
+    <div id="timeline-detail" class="timeline-detail">Save readings to build a detailed chart.</div>
+  </div>
 
   <nav>
     <button class="tab active" data-screen="test" type="button">Test</button>
