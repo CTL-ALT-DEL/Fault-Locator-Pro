@@ -25,6 +25,17 @@ export const WIRE_DB = [
 
   { id: "cat5", name: "CAT5e 24 AWG pair", category: "Data", gauge: "24", ohms1000: 25.67, tags: "data cat cat5 cat5e ethernet network" },
   { id: "cat6", name: "CAT6 23 AWG pair", category: "Data", gauge: "custom", ohms1000: 20.36, tags: "data cat cat6 ethernet network" },
+
+  { id: "belden-6200ue", name: "Belden 6200UE 18/2 FPLP", category: "Fire", gauge: "18", ohms1000: 6.5, tags: "belden 6200ue fire fplp plenum 18/2 slc nac" },
+  { id: "belden-6201ue", name: "Belden 6201UE 18/4 FPLP", category: "Fire", gauge: "18", ohms1000: 6.5, tags: "belden 6201ue fire fplp plenum 18/4 speaker strobe" },
+  { id: "genesis-18-2", name: "Honeywell Genesis 18/2 FPLP", category: "Fire", gauge: "18", ohms1000: 6.5, tags: "honeywell genesis fire fplp plenum 18/2" },
+  { id: "genesis-16-2", name: "Honeywell Genesis 16/2 FPLP", category: "Fire", gauge: "16", ohms1000: 4.1, tags: "honeywell genesis fire fplp plenum 16/2 nac" },
+  { id: "westpenn-25225b", name: "West Penn 25225B 18/2 FPLP", category: "Fire", gauge: "18", ohms1000: 6.5, tags: "west penn westpenn 25225b fire fplp plenum 18/2" },
+  { id: "southwire-18-4", name: "Southwire 18/4 FPLP", category: "Fire", gauge: "18", ohms1000: 6.5, tags: "southwire fire fplp plenum 18/4" },
+  { id: "simplex-18-2", name: "Simplex-style 18/2 SLC", category: "Fire", gauge: "18", ohms1000: 6.5, tags: "simplex fire slc 18/2 addressable" },
+  { id: "notifier-18-2", name: "Notifier-style 18/2 SLC", category: "Fire", gauge: "18", ohms1000: 6.5, tags: "notifier fire slc 18/2 addressable" },
+  { id: "siemens-18-2", name: "Siemens-style 18/2 SLC", category: "Fire", gauge: "18", ohms1000: 6.5, tags: "siemens fire slc 18/2 addressable" },
+  { id: "est-18-2", name: "EST-style 18/2 SLC", category: "Fire", gauge: "18", ohms1000: 6.5, tags: "est edwards fire slc 18/2 addressable" },
   { id: "sec22", name: "22 AWG security/control", category: "Security", gauge: "22", ohms1000: 16.14, tags: "security alarm control 22/2 22/4" },
 ];
 

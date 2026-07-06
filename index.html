@@ -16,7 +16,7 @@
 <div id="splash" class="splash">
   <div class="splash-panel">
     <div class="splash-title">FAULT LOCATOR PRO</div>
-    <div class="splash-sub">Diagnostic system 2.0.6</div>
+    <div class="splash-sub">Diagnostic system 2.1.0</div>
     <div class="splash-line">Loading wire database...</div>
   </div>
 </div>
@@ -26,7 +26,7 @@
       <h1>Fault Locator Pro</h1>
       <div class="sub">Professional Diagnostic System</div>
     </div>
-    <button id="version-button" class="version" type="button">2.0.6</button>
+    <button id="version-button" class="version" type="button">2.1.0</button>
   </header>
 
   <main>
@@ -49,6 +49,8 @@
             <div id="distance-bar" class="distance-bar"></div>
           </div>
         </div>
+
+        <div id="recent-calcs" class="recent-calcs hidden"></div>
 
         <div class="wire-top">
           <button id="wire-button" class="wire-button fullwidth" type="button">
@@ -83,8 +85,15 @@
         </div>
 
         <div id="wire-panel" class="wire-panel hidden">
-          <div class="wire-section-title">Favorites</div>
+          <div class="wire-section-title">Job Presets</div>
+          <div id="wire-presets" class="wire-presets"></div>
+
+          <div class="wire-section-title">Favorites <small>tap to use • hold to replace with current wire</small></div>
           <div id="wire-favorites" class="wire-favorites"></div>
+
+          <div class="wire-section-title">Recent Wires</div>
+          <div id="wire-recents" class="wire-recents"></div>
+
           <input id="wire-search" type="search" placeholder="Search wire">
           <div class="filter-row">
             <button data-wire-filter="" type="button">All</button>
@@ -190,7 +199,7 @@
     <section id="screen-about" class="screen">
       <div class="card">
         <h2>About</h2>
-        <p><b>Fault Locator Pro</b> 2.0.6</p>
+        <p><b>Fault Locator Pro</b> 2.1.0</p>
         <p>Fault Locator Pro is a professional field diagnostic tool for fire alarm and low-voltage technicians. It estimates distance to shorts and ground faults from resistance readings, selected cable data, and temperature compensation.</p>
         <p>The 2.0 platform is a clean modular rebuild designed for reliability, fast iPhone use, job tracking, diagnostic history, cable mapping, and future reporting tools.</p>
         <p><b>Developer:</b> David Bannerman</p>
@@ -231,6 +240,8 @@
       <button id="close-revisions" type="button">Close</button>
     </div>
     <div class="revision-body">
+      <p><b>2.1.0</b> Smart wire workflow: programmable favorites, recent wires, job presets, and recently calculated shortcuts.</p>
+        <p><b>2.1.0</b> Programmable favorites, recent wires, job presets, recently calculated restore strip.</p>
       <p><b>2.0.6</b> Control layout refinements, normal timeline behavior, redesigned Cable Run Builder, version-history popup, centered labels, and About rewrite.</p>
       <p><b>2.0.5</b> LCD display polish and diagnostic chart color bands.</p>
       <p><b>2.0.4</b> Full-width wire selector and realistic meter buttons.</p>

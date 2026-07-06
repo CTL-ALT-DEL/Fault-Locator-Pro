@@ -566,3 +566,71 @@ input,select,textarea{
   border-left:3px solid var(--yellow);
   padding-left:9px;
 }
+
+/* 2.1.0 favorites, presets, and recents */
+.wire-section-title small{
+  display:block;
+  color:#9c9c9c;
+  font-size:8.5px;
+  font-weight:700;
+  letter-spacing:.04em;
+  margin-top:2px;
+}
+.wire-presets,
+.wire-recents{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:5px;
+  margin-bottom:8px;
+}
+.wire-presets button,
+.wire-recents button{
+  min-height:34px!important;
+  font-size:10px!important;
+  padding:4px!important;
+}
+.wire-recents{
+  grid-template-columns:1fr 1fr;
+}
+.wire-recents button{
+  color:#f4f4f4!important;
+  background:linear-gradient(180deg,#303030,#101010)!important;
+}
+.mini-muted{
+  grid-column:1/-1;
+  text-align:center;
+  font-size:11px;
+  padding:5px;
+}
+.recent-calcs{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:4px;
+  margin-top:7px;
+}
+.recent-calcs button{
+  min-height:42px!important;
+  padding:4px 2px!important;
+  border-radius:10px!important;
+}
+.recent-calcs b{
+  display:block;
+  color:var(--yellow);
+  font-size:13px;
+  line-height:1;
+}
+.recent-calcs span{
+  display:block;
+  color:#ddd;
+  font-size:8.5px;
+  line-height:1.05;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  margin-top:3px;
+}
+@media(max-height:740px){
+  .recent-calcs button{min-height:36px!important}
+  .recent-calcs b{font-size:12px}
+  .recent-calcs span{font-size:8px}
+}
