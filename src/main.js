@@ -9,8 +9,8 @@ import { $, $$, toast, setActiveScreen, renderDistanceBar } from "./ui/dom.js";
 
 let selectedWire = findWire("awg22");
 
-const FAVORITES_KEY = "fault_locator_pro_2_favorites";
-const RECENT_WIRES_KEY = "fault_locator_pro_2_recent_wires";
+const FAVORITES_KEY = "fault_locator_pro_3_favorites";
+const RECENT_WIRES_KEY = "fault_locator_pro_3_recent_wires";
 
 const DEFAULT_FAVORITES = ["fpl18-2", "fpl18-4", "shield18", "protect-phsc"];
 const PRESETS = {
@@ -156,6 +156,11 @@ function setFaultDisplay(diagnosis) {
   $("guidance").innerHTML = `<span class="${diagnosis.level}">${diagnosis.label}:</span> ${diagnosis.message}`;
   $("confidence").textContent = diagnosis.confidence ? `${diagnosis.confidence}%` : "--";
   $("health").textContent = diagnosis.health ? `${diagnosis.health}/100` : "--";
+  const next = $("next-action");
+  if (next) {
+    const label = String(diagnosis.label || "").toUpperCase();
+    next.textContent = label.includes("GROUND") ? "GROUND" : label.includes("SHORT") ? "INSPECT" : label.includes("RESISTIVE") ? "ISOLATE" : "TEST";
+  }
 }
 
 function updateCalculation() {
