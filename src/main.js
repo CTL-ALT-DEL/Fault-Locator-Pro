@@ -11,7 +11,6 @@ let selectedWire = findWire("awg22");
 
 const FAVORITES_KEY = "fault_locator_pro_2_favorites";
 const RECENT_WIRES_KEY = "fault_locator_pro_2_recent_wires";
-const RECENT_CALCS_KEY = "fault_locator_pro_2_recent_calcs";
 
 const DEFAULT_FAVORITES = ["fpl18-2", "fpl18-4", "shield18", "protect-phsc"];
 const PRESETS = {
@@ -60,25 +59,6 @@ function addRecentWire(wireId) {
   const next = [wireId, ...recents.filter(id => id !== wireId)].slice(0, 10);
   writeJson(RECENT_WIRES_KEY, next);
   renderRecentWires();
-}
-
-function addRecentCalculation(result) {
-  if (!result) return;
-  const calcs = readJson(RECENT_CALCS_KEY, []);
-  const item = {
-    id: result.id,
-    wireId: result.wireId,
-    wireName: result.wireName,
-    ohms: result.ohms,
-    lengthFeet: result.lengthFeet,
-    tempF: result.tempF,
-    mode: result.mode,
-    distanceFeet: result.distanceFeet,
-    diagnosis: result.diagnosis,
-    time: Date.now()
-  };
-  writeJson(RECENT_CALCS_KEY, [item, ...calcs].slice(0, 5));
-  renderRecentCalculations();
 }
 
 function formatWireName(name) {
@@ -150,30 +130,6 @@ function renderWirePresets() {
       writeJson(FAVORITES_KEY, PRESETS[button.dataset.preset]);
       renderWireFavorites();
       toast(`${button.dataset.preset} preset loaded`);
-    });
-  });
-}
-
-function renderRecentCalculations() {
-  const container = $("recent-calcs");
-  if (!container) return;
-  const calcs = readJson(RECENT_CALCS_KEY, []);
-  container.classList.toggle("hidden", calcs.length === 0);
-  container.innerHTML = calcs.map((calc, index) => `<button type="button" data-recent-calc="${index}">
-    <b>${calc.distanceFeet.toFixed(0)} ft</b><span>${calc.wireName.replace(" fire alarm", "")}</span>
-  </button>`).join("");
-  $$("[data-recent-calc]", container).forEach(button => {
-    button.addEventListener("click", () => {
-      const item = readJson(RECENT_CALCS_KEY, [])[Number(button.dataset.recentCalc)];
-      const wire = findWire(item.wireId);
-      if (wire) selectedWire = wire;
-      $("input-ohms").value = item.ohms;
-      $("input-length").value = item.lengthFeet || "";
-      $("input-temp").value = item.tempF || 68;
-      $("input-mode").value = item.mode || "pair";
-      updateWireUI();
-      updateCalculation();
-      toast("Calculation restored");
     });
   });
 }
@@ -277,7 +233,6 @@ function boot() {
   renderWirePresets();
   renderWireFavorites();
   renderRecentWires();
-  renderRecentCalculations();
   renderWireResults("");
   renderResistorTable();
   renderCableMap($("cable-map"));
@@ -299,9 +254,19 @@ function boot() {
     });
   });
 
-  ["input-ohms", "input-length", "input-temp", "input-mode"].forEach(id => {
+  ["input-ohms", "input-length", "input-temp"].forEach(id => {
     $(id).addEventListener("input", updateCalculation);
     $(id).addEventListener("change", updateCalculation);
+  });
+
+  $("mode-toggle").addEventListener("click", () => {
+    const nextMode = $("input-mode").value === "pair" ? "ground" : "pair";
+    $("input-mode").value = nextMode;
+    $("mode-toggle").classList.toggle("ground", nextMode === "ground");
+    $("mode-toggle").classList.toggle("short", nextMode === "pair");
+    $("mode-toggle").setAttribute("aria-pressed", nextMode === "ground" ? "true" : "false");
+    if (navigator.vibrate) navigator.vibrate(25);
+    updateCalculation();
   });
 
   $("button-clear").addEventListener("click", () => {
@@ -316,7 +281,6 @@ function boot() {
       return;
     }
     saveJob(state.lastResult);
-    addRecentCalculation(state.lastResult);
     toast("Job saved");
   });
 

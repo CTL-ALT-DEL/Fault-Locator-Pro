@@ -16,7 +16,7 @@
 <div id="splash" class="splash">
   <div class="splash-panel">
     <div class="splash-title">FAULT LOCATOR PRO</div>
-    <div class="splash-sub">Diagnostic system 2.1.0</div>
+    <div class="splash-sub">Diagnostic system 2.1.2</div>
     <div class="splash-line">Loading wire database...</div>
   </div>
 </div>
@@ -26,7 +26,7 @@
       <h1>Fault Locator Pro</h1>
       <div class="sub">Professional Diagnostic System</div>
     </div>
-    <button id="version-button" class="version" type="button">2.1.0</button>
+    <button id="version-button" class="version" type="button">2.1.2</button>
   </header>
 
   <main>
@@ -49,10 +49,7 @@
             <div id="distance-bar" class="distance-bar"></div>
           </div>
         </div>
-
-        <div id="recent-calcs" class="recent-calcs hidden"></div>
-
-        <div class="wire-top">
+<div class="wire-top">
           <button id="wire-button" class="wire-button fullwidth" type="button">
             <span class="wire-kicker">🔍 Wire Selection</span>
             <b id="wire-name">22 AWG solid copper</b>
@@ -73,12 +70,15 @@
             <input id="input-temp" type="number" inputmode="decimal" value="68">
           </label>
 
-          <label>Mode
-            <select id="input-mode">
-              <option value="pair">Pair</option>
-              <option value="ground">Ground</option>
-            </select>
-          </label>
+          <div class="mode-toggle-wrap">
+            <div class="toggle-title">Test Mode</div>
+            <button id="mode-toggle" class="mode-toggle short" type="button" aria-pressed="false">
+              <span class="toggle-label top">SHORT</span>
+              <span class="toggle-body"><i></i></span>
+              <span class="toggle-label bottom">GROUND</span>
+            </button>
+            <input id="input-mode" type="hidden" value="pair">
+          </div>
 
           <button id="button-clear" type="button">Clear</button>
           <button id="button-save" class="primary" type="button">Save</button>
@@ -199,7 +199,7 @@
     <section id="screen-about" class="screen">
       <div class="card">
         <h2>About</h2>
-        <p><b>Fault Locator Pro</b> 2.1.0</p>
+        <p><b>Fault Locator Pro</b> 2.1.2</p>
         <p>Fault Locator Pro is a professional field diagnostic tool for fire alarm and low-voltage technicians. It estimates distance to shorts and ground faults from resistance readings, selected cable data, and temperature compensation.</p>
         <p>The 2.0 platform is a clean modular rebuild designed for reliability, fast iPhone use, job tracking, diagnostic history, cable mapping, and future reporting tools.</p>
         <p><b>Developer:</b> David Bannerman</p>
@@ -240,8 +240,13 @@
       <button id="close-revisions" type="button">Close</button>
     </div>
     <div class="revision-body">
-      <p><b>2.1.0</b> Smart wire workflow: programmable favorites, recent wires, job presets, and recently calculated shortcuts.</p>
-        <p><b>2.1.0</b> Programmable favorites, recent wires, job presets, recently calculated restore strip.</p>
+      <p><b>2.1.2</b> Removed recently calculated shortcut buttons under the LCD display.</p>
+        <p><b>2.1.1</b> Replaced Mode dropdown with a realistic Short/Ground rocker toggle switch.</p>
+        <p><b>2.1.0</b> Smart wire workflow: programmable favorites, recent wires, job presets, and recently calculated shortcuts.</p>
+        <p><b>2.1.2</b> Removed recently calculated shortcut buttons under the LCD display.</p>
+      <p><b>2.1.2</b> Removed recently calculated shortcut buttons under the LCD display.</p>
+      <p><b>2.1.1</b> Realistic Short/Ground rocker toggle switch.</p>
+      <p><b>2.1.0</b> Programmable favorites, recent wires, job presets, recently calculated restore strip.</p>
       <p><b>2.0.6</b> Control layout refinements, normal timeline behavior, redesigned Cable Run Builder, version-history popup, centered labels, and About rewrite.</p>
       <p><b>2.0.5</b> LCD display polish and diagnostic chart color bands.</p>
       <p><b>2.0.4</b> Full-width wire selector and realistic meter buttons.</p>
