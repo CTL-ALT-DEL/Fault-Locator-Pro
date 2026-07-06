@@ -201,19 +201,7 @@ function boot() {
       renderJobs();
     }
   });
-
-  $("timeline-chart").addEventListener("click", () => {
-    renderJobs();
-    $("chart-modal").classList.remove("hidden");
-    if (screen.orientation && screen.orientation.lock) screen.orientation.lock("landscape").catch(() => {});
-  });
-
-  $("close-chart").addEventListener("click", () => {
-    $("chart-modal").classList.add("hidden");
-    if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
-  });
-
-  $("add-segment").addEventListener("click", () => {
+$("add-segment").addEventListener("click", () => {
     const name = $("segment-name").value.trim();
     const feet = readNumber("segment-feet");
     if (!name || !Number.isFinite(feet) || feet <= 0) {
@@ -232,6 +220,14 @@ function boot() {
       if (button.dataset.screen === "jobs") renderJobs();
       if (button.dataset.screen !== "help") $$("#screen-help details").forEach(item => item.open = false);
     });
+  });
+
+  $("version-button").addEventListener("click", () => {
+    $("revision-modal").classList.remove("hidden");
+  });
+
+  $("close-revisions").addEventListener("click", () => {
+    $("revision-modal").classList.add("hidden");
   });
 
   if ("serviceWorker" in navigator) {

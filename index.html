@@ -16,7 +16,7 @@
 <div id="splash" class="splash">
   <div class="splash-panel">
     <div class="splash-title">FAULT LOCATOR PRO</div>
-    <div class="splash-sub">Diagnostic system 2.0.5</div>
+    <div class="splash-sub">Diagnostic system 2.0.6</div>
     <div class="splash-line">Loading wire database...</div>
   </div>
 </div>
@@ -26,7 +26,7 @@
       <h1>Fault Locator Pro</h1>
       <div class="sub">Professional Diagnostic System</div>
     </div>
-    <div class="version">2.0.5</div>
+    <button id="version-button" class="version" type="button">2.0.6</button>
   </header>
 
   <main>
@@ -67,15 +67,15 @@
             <input id="input-length" type="number" inputmode="decimal" placeholder="500 est.">
           </label>
 
+          <label>Temp
+            <input id="input-temp" type="number" inputmode="decimal" value="68">
+          </label>
+
           <label>Mode
             <select id="input-mode">
               <option value="pair">Pair</option>
               <option value="ground">Ground</option>
             </select>
-          </label>
-
-          <label>Temp
-            <input id="input-temp" type="number" inputmode="decimal" value="68">
           </label>
 
           <button id="button-clear" type="button">Clear</button>
@@ -113,22 +113,33 @@
           <h2>Diagnostic Timeline</h2>
           <button id="clear-jobs" type="button">Clear</button>
         </div>
-        <svg id="timeline-chart" class="timeline-clickable" viewBox="0 0 320 150" preserveAspectRatio="none"></svg>
+        <svg id="timeline-chart" viewBox="0 0 320 150" preserveAspectRatio="none"></svg>
         <p id="timeline-insight" class="muted">Save readings to build a diagnostic trend.</p>
         <div id="job-list" class="job-list"></div>
       </div>
     </section>
 
     <section id="screen-cable" class="screen">
-      <div class="card">
+      <div class="card cable-builder-card">
         <h2>Cable Run Builder</h2>
-        <p class="muted">Add known field points. Future builds will map the calculated fault to the nearest section.</p>
-        <div class="segment-inputs">
-          <input id="segment-name" placeholder="Device or box name">
-          <input id="segment-feet" type="number" inputmode="decimal" placeholder="feet from previous">
-          <button id="add-segment" class="primary" type="button">Add</button>
+        <p class="muted">Build the cable path from the panel outward. Add each junction box, pull station, smoke detector, module, or splice point in order.</p>
+
+        <div class="builder-panel">
+          <label>Field point
+            <input id="segment-name" placeholder="Panel, JB-1, Pull Station, Smoke">
+          </label>
+          <label>Feet from previous
+            <input id="segment-feet" type="number" inputmode="decimal" placeholder="feet">
+          </label>
+          <button id="add-segment" class="primary" type="button">Add Point</button>
         </div>
-        <div id="cable-map" class="cable-map"></div>
+
+        <div class="builder-summary">
+          <div><span>Total Points</span><b id="segment-count">0</b></div>
+          <div><span>Total Length</span><b id="segment-total">0 ft</b></div>
+        </div>
+
+        <div id="cable-map" class="cable-map pro-cable-map"></div>
       </div>
     </section>
 
@@ -179,8 +190,9 @@
     <section id="screen-about" class="screen">
       <div class="card">
         <h2>About</h2>
-        <p><b>Fault Locator Pro</b> 2.0.5</p>
-        <p>Professional fire alarm and low-voltage diagnostic PWA.</p>
+        <p><b>Fault Locator Pro</b> 2.0.6</p>
+        <p>Fault Locator Pro is a professional field diagnostic tool for fire alarm and low-voltage technicians. It estimates distance to shorts and ground faults from resistance readings, selected cable data, and temperature compensation.</p>
+        <p>The 2.0 platform is a clean modular rebuild designed for reliability, fast iPhone use, job tracking, diagnostic history, cable mapping, and future reporting tools.</p>
         <p><b>Developer:</b> David Bannerman</p>
         <p><b>Contact:</b> <a href="mailto:David@Bannerman.us">David@Bannerman.us</a></p>
       </div>
@@ -203,13 +215,7 @@
       </details>
     </section>
   </main>
-  <div id="chart-modal" class="chart-modal hidden">
-    <div class="chart-modal-bar"><b>Diagnostic Timeline</b><button id="close-chart" type="button">Close</button></div>
-    <svg id="timeline-chart-full" viewBox="0 0 760 360" preserveAspectRatio="none"></svg>
-    <div id="timeline-detail" class="timeline-detail">Save readings to build a detailed chart.</div>
-  </div>
-
-  <nav>
+<nav>
     <button class="tab active" data-screen="test" type="button">Test</button>
     <button class="tab" data-screen="jobs" type="button">Jobs</button>
     <button class="tab" data-screen="cable" type="button">Cable</button>
@@ -218,6 +224,21 @@
   </nav>
 </div>
 
+<div id="revision-modal" class="revision-modal hidden">
+  <div class="revision-card">
+    <div class="revision-head">
+      <b>Revision History</b>
+      <button id="close-revisions" type="button">Close</button>
+    </div>
+    <div class="revision-body">
+      <p><b>2.0.6</b> Control layout refinements, normal timeline behavior, redesigned Cable Run Builder, version-history popup, centered labels, and About rewrite.</p>
+      <p><b>2.0.5</b> LCD display polish and diagnostic chart color bands.</p>
+      <p><b>2.0.4</b> Full-width wire selector and realistic meter buttons.</p>
+      <p><b>2.0.3</b> Splash startup reliability fix.</p>
+      <p><b>2.0.0</b> Modular app rebuild.</p>
+    </div>
+  </div>
+</div>
 <div id="toast" class="toast hidden"></div>
 <script type="module" src="src/main.js"></script>
 </body>
